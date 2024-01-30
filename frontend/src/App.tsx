@@ -1,7 +1,7 @@
 function App() {
   return (
     <div className="flex">
-      <h1 className="text-6xl">Hello</h1>
+      <h1 className="text-6xl text-center">Hello</h1>
     </div>
   );
 }
