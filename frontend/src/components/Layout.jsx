@@ -16,13 +16,13 @@ const Layout = () => {
   }, [theme]);
 
   return (
-    <>
+    <div className="min-h-screen">
       <Header toggleTheme={toggleTheme} theme={theme} />
-      <main className="h-[100vh-30px] w-full flex flex-col justify-center items-center">
-        <Outlet theme={theme} />
+      <main className="w-full flex flex-col justify-center items-center">
+        <Outlet />
       </main>
-      <Footer />
-    </>
+      <Footer theme={theme} />
+    </div>
   );
 };
 

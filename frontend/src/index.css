@@ -13,16 +13,6 @@
   --box-shadow: 0 5px 20px 1px rgba(0, 0, 0, 0.5);
 }
 
-[data-theme='light'] {
-  --primary-color: #0062ff;
-  --primary-variant-color: #003aaf;
-  --secondary-color: #ff5500;
-  --on-primary: #ffffff;
-  --on-background: #2b2b2b;
-  --background: #ebebeb;
-  --box-shadow: 0 5px 20px 1px rgba(0, 0, 0, 0.5);
-}
-
 [data-theme='dark'] {
   --primary-color: #6e00ce;
   --primary-variant-color: #2400a7;

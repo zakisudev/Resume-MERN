@@ -11,7 +11,7 @@ const Skills = ({ skills, theme }) => {
             <div className="">
               {skills
                 ?.filter((skill) => skill.type === 'frontend')
-                .map((skill) => (
+                ?.map((skill) => (
                   <span>{skill}</span>
                 ))}
             </div>
@@ -23,7 +23,7 @@ const Skills = ({ skills, theme }) => {
             <div className="">
               {skills
                 ?.filter((skill) => skill.type === 'backend')
-                .map((skill) => (
+                ?.map((skill) => (
                   <span>{skill}</span>
                 ))}
             </div>
@@ -35,7 +35,7 @@ const Skills = ({ skills, theme }) => {
             <div className="">
               {skills
                 ?.filter((skill) => skill.type === 'database')
-                .map((skill) => (
+                ?.map((skill) => (
                   <span>{skill}</span>
                 ))}
             </div>
@@ -47,7 +47,7 @@ const Skills = ({ skills, theme }) => {
             <div className="">
               {skills
                 ?.filter((skill) => skill.type === 'devops')
-                .map((skill) => (
+                ?.map((skill) => (
                   <span>{skill}</span>
                 ))}
             </div>
@@ -59,7 +59,7 @@ const Skills = ({ skills, theme }) => {
             <div className="">
               {skills
                 ?.filter((skill) => skill.type === 'other')
-                .map((skill) => (
+                ?.map((skill) => (
                   <span>{skill}</span>
                 ))}
             </div>
