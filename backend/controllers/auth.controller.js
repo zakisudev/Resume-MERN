@@ -43,11 +43,12 @@ const registerMe = asyncHandler(async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const logMeIn = asyncHandler(async (req, res) => {
-  const { email, username, password } = req.body;
+  const { user, password } = req.body;
 
   try {
     const me =
-      (await Me.findOne({ email })) || (await Me.findOne({ username }));
+      (await Me.findOne({ email: user })) ||
+      (await Me.findOne({ username: user }));
 
     if (!me) {
       res.status(401).json({ message: 'Invalid credentials', status: false });
