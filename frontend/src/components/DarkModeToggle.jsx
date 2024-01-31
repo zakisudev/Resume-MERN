@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
 
 const DarkModeToggle = ({ toggleTheme, theme }) => {
@@ -12,7 +11,11 @@ const DarkModeToggle = ({ toggleTheme, theme }) => {
           {theme === 'dark' ? (
             <FaMoon className="text-[30px] mr-[5px]" />
           ) : (
-            <FaSun className="text-[30px] mr-[5px]" />
+            <FaSun
+              className={`${
+                theme === 'light' ? 'text-secondaryColorLight' : ''
+              } text-[30px] mr-[5px]`}
+            />
           )}
         </span>
         <label className="theme-switch">

@@ -14,9 +14,23 @@ export const getPersonalInfo = async () => {
   try {
     const res = await axios.get(PERSONAL_INFO_URL);
     if (res?.status) {
-      return res?.data?.personalInformation;
+      return res?.data?.personal;
     } else {
       return 'No personal information found';
+    }
+  } catch (err) {
+    console.error(err);
+    return err.message;
+  }
+};
+
+export const getSocialLinks = async () => {
+  try {
+    const res = await axios.get(SOCIAL_URL);
+    if (res?.status) {
+      return res?.data?.socials;
+    } else {
+      return 'No social link found';
     }
   } catch (err) {
     console.error(err);
@@ -42,7 +56,7 @@ export const getEducations = async () => {
   try {
     const res = await axios.get(EDUCATION_URL);
     if (res?.status) {
-      return res?.data?.education;
+      return res?.data?.educations;
     } else {
       return 'No education found';
     }
@@ -56,7 +70,7 @@ export const getExperiences = async () => {
   try {
     const res = await axios.get(EXPERIENCE_URL);
     if (res?.status) {
-      return res?.data?.experience;
+      return res?.data?.works;
     } else {
       return 'No experience found';
     }
@@ -70,7 +84,7 @@ export const getSkills = async () => {
   try {
     const res = await axios.get(SKILL_URL);
     if (res?.status) {
-      return res?.data?.skill;
+      return res?.data?.skills;
     } else {
       return 'No skill found';
     }
@@ -84,23 +98,9 @@ export const getProjects = async () => {
   try {
     const res = await axios.get(PROJECT_URL);
     if (res?.status) {
-      return res?.data?.project;
+      return res?.data?.projects;
     } else {
       return 'No project found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
-export const getSocialLinks = async () => {
-  try {
-    const res = await axios.get(SOCIAL_URL);
-    if (res?.status) {
-      return res?.data?.social;
-    } else {
-      return 'No social link found';
     }
   } catch (err) {
     console.error(err);

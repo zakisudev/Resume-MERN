@@ -16,7 +16,7 @@ import {
   getSummary,
 } from '../utils/apis';
 
-const Home = () => {
+const Home = ({ theme }) => {
   const [personal, setPersonal] = useState({});
   const [socialLinks, setSocialLinks] = useState([]);
   const [summary, setSummary] = useState('');
@@ -66,19 +66,19 @@ const Home = () => {
   return (
     <>
       {/* Personal Information */}
-      <PersonalInformation personal={personal} />
+      <PersonalInformation personal={personal} theme={theme} />
       {/* Social links */}
-      <SocialLinks socialLinks={socialLinks} />
+      <SocialLinks socialLinks={socialLinks} theme={theme} />
       {/* Summary */}
-      <Summary summary={summary} />
+      <Summary summary={summary} theme={theme} />
       {/* Education */}
-      <Education education={education} />
+      <Education education={education} theme={theme} />
       {/* Experience */}
-      <Experience experience={experience} />
+      <Experience experience={experience} theme={theme} />
       {/* Projects */}
-      <Projects projects={projects} />
+      <Projects projects={projects} theme={theme} />
       {/* Skills */}
-      <Skills skills={skills} />
+      <Skills skills={skills} theme={theme} />
     </>
   );
 };
