@@ -108,23 +108,36 @@ export const getProjects = async () => {
   }
 };
 
-export const login = async (user, password) => {
+export const login = async (user) => {
   try {
-    const res = await axios.post(AUTH_URL, { user, password });
+    const res = await axios.post(`${AUTH_URL}/login`, user);
     if (res?.status) {
       return res?.data;
     } else {
       return 'No user found';
     }
   } catch (err) {
-    console.error(err);
-    return err.message;
+    return err?.response?.data;
   }
 };
 
 export const logout = async () => {
   try {
-    const res = await axios.get(AUTH_URL);
+    const res = await axios.get(`${AUTH_URL}/logout`);
+    if (res.status) {
+      return res.data;
+    } else {
+      return 'No user found';
+    }
+  } catch (err) {
+    console.error(err);
+    return err?.response?.data;
+  }
+};
+
+export const getMe = async (userId) => {
+  try {
+    const res = await axios.get(`${AUTH_URL}/profile/${userId}`);
     if (res.status) {
       return res.data;
     } else {

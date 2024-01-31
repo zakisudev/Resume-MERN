@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import Footer from './Footer';
 import { useEffect, useState } from 'react';
 
 const Layout = () => {
@@ -21,7 +20,6 @@ const Layout = () => {
       <main className="w-full flex flex-col justify-center items-center">
         <Outlet />
       </main>
-      <Footer theme={theme} />
     </div>
   );
 };

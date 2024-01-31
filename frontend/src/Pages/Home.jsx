@@ -15,6 +15,7 @@ import {
   getSocialLinks,
   getSummary,
 } from '../utils/apis';
+import Footer from '../components/Footer';
 
 const Home = ({ theme }) => {
   const [personal, setPersonal] = useState({});
@@ -79,6 +80,7 @@ const Home = ({ theme }) => {
       <Projects projects={projects} theme={theme} />
       {/* Skills */}
       <Skills skills={skills} theme={theme} />
+      <Footer theme={theme} />
     </>
   );
 };
