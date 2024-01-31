@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Me = require('../models/me');
+const mongoose = require('mongoose');
 const {
   comparePassword,
   hashPassword,
@@ -51,23 +52,29 @@ const logMeIn = asyncHandler(async (req, res) => {
       (await Me.findOne({ username: user }));
 
     if (!me) {
-      res.status(401).json({ message: 'Invalid credentials', status: false });
+      return res
+        .status(401)
+        .json({ message: 'Invalid credentials', status: false });
     }
 
     const isMatch = await comparePassword(password, me.password);
 
     if (!isMatch) {
-      res.status(401).json({ message: 'Invalid credentials', status: false });
+      return res
+        .status(401)
+        .json({ message: 'Invalid credentials', status: false });
     }
 
-    res
+    return res
       .status(200)
       .cookie('jwt', generateToken(me), {
         httpOnly: true,
       })
-      .json({ message: 'Logged in successfully', status: true });
+      .json({ user: me._id, status: true });
   } catch (error) {
-    res.status(401).json({ message: 'Invalid credentials', status: false });
+    return res
+      .status(401)
+      .json({ message: 'Invalid credentials', status: false });
   }
 });
 
@@ -84,8 +91,112 @@ const logMeOut = asyncHandler(async (_, res) => {
     .json({ message: 'Logged out successfully', status: true });
 });
 
+// @desc    Get profile
+// @route   GET /api/auth/profile/:id
+// @access  Private
+const getMe = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    res.status(404).json({ message: 'User not found', status: false });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(404).json({ message: 'Invalid user Id', status: false });
+  }
+
+  try {
+    const me = await Me.findById(req.params.id).select('-password');
+
+    if (!me) {
+      res.status(404).json({ message: 'User not found', status: false });
+    }
+
+    res.status(200).json({ profile: me, status: true });
+  } catch (error) {
+    res
+      .status(404)
+      .json({ message: 'Error ocurred, try again later', status: false });
+  }
+});
+
+// @desc    Update profile
+// @route   PUT /api/auth/profile/:id
+// @access  Private
+const updateMe = asyncHandler(async (req, res) => {
+  const { username, email, password } = req.body;
+  if (!req.user) {
+    res.status(404).json({ message: 'User not found', status: false });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(404).json({ message: 'Invalid user Id', status: false });
+  }
+
+  if (!username || !email || !password) {
+    res
+      .status(400)
+      .json({ message: 'Please fill at least one field', status: false });
+  }
+
+  try {
+    const updatedMe = await Me.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        username,
+        email,
+        password: await hashPassword(password),
+      }
+    );
+
+    if (!updatedMe) {
+      res.status(404).json({ message: 'User not updated', status: false });
+    }
+
+    res.status(200).json({ profile: updatedMe, status: true });
+  } catch (error) {
+    res
+      .status(404)
+      .json({ message: 'Error ocurred, try again later', status: false });
+  }
+});
+
+// @desc    Delete Me
+// @route   DELETE /api/auth/profile/:id
+// @access  Private
+const deleteMe = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    res.status(404).json({ message: 'User not found', status: false });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(404).json({ message: 'Invalid user Id', status: false });
+  }
+
+  try {
+    const deletedMe = await Me.findOneAndDelete({
+      _id: req.params.id,
+    });
+
+    if (!deletedMe) {
+      res.status(404).json({ message: 'User not deleted', status: false });
+    }
+
+    res
+      .status(200)
+      .json({ message: 'User deleted successfully', status: true });
+  } catch (error) {
+    res
+      .status(404)
+      .json({ message: 'Error ocurred, try again later', status: false });
+  }
+});
+
 module.exports = {
   registerMe,
   logMeIn,
   logMeOut,
+  getMe,
+  updateMe,
+  deleteMe,
 };
