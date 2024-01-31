@@ -3,11 +3,26 @@ const Schema = mongoose.Schema;
 
 const educationSchema = new Schema(
   {
-    schoolName: String,
-    degree: String,
-    fieldOfStudy: String,
-    startDate: Date,
-    endDate: Date,
+    schoolName: {
+      type: String,
+      required: true,
+    },
+    degree: {
+      type: String,
+      required: true,
+    },
+    fieldOfStudy: {
+      type: String,
+      required: true,
+    },
+    startYear: {
+      type: Date,
+      required: true,
+    },
+    endYear: {
+      type: Date,
+      required: true,
+    },
     description: String,
   },
   {

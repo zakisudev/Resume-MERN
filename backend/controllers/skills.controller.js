@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const Skill = require('../models/skill.model');
+const Skill = require('../models/skills.model');
 const mongoose = require('mongoose');
 
 // @desc    Get all skills

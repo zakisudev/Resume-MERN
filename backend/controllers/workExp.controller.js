@@ -7,8 +7,8 @@ const WorkExperience = require('../models/workExp.model');
 // @access  Public
 const getWorkExperiences = asyncHandler(async (req, res) => {
   try {
-    const workExperiences = await WorkExperience.find({});
-    res.status(200).json({ workExperiences, status: true });
+    const works = await WorkExperience.find({});
+    res.status(200).json({ works, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
   }

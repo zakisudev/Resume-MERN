@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 // @access  Public
 const getPersonalInformation = asyncHandler(async (_, res) => {
   try {
-    const personalInformation = await PersonalInformation.find({});
-    res.status(200).json({ personalInformation, status: true });
+    const personal = await PersonalInformation.find({});
+    res.status(200).json({ personal, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
   }

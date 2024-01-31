@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 // @access  Public
 const getSocialLinks = asyncHandler(async (req, res) => {
   try {
-    const socialLinks = await SocialLink.find({});
-    res.status(200).json({ socialLinks, status: true });
+    const socials = await SocialLink.find({});
+    res.status(200).json({ socials, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
   }

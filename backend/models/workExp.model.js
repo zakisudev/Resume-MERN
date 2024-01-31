@@ -10,10 +10,6 @@ const workExperienceSchema = new Schema(
     description: String,
     city: String,
     state: String,
-    personalInformation: {
-      type: Schema.Types.ObjectId,
-      ref: 'PersonalInformation',
-    },
   },
   {
     timestamps: true,

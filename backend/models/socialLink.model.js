@@ -3,11 +3,8 @@ const Schema = mongoose.Schema;
 
 const socialLinkSchema = new Schema(
   {
+    name: String,
     socialLink: String,
-    personalInformation: {
-      type: Schema.Types.ObjectId,
-      ref: 'PersonalInformation',
-    },
   },
   {
     timestamps: true,

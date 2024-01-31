@@ -5,9 +5,13 @@ const mongoose = require('mongoose');
 // @desc    Get all summaries
 // @route   GET /api/summaries
 // @access  Public
-const getSummaries = asyncHandler(async (req, res) => {
-  const summaries = await Summary.find({});
-  res.json({ summaries });
+const getSummary = asyncHandler(async (req, res) => {
+  try {
+    const summary = await Summary.find({});
+    res.status(200).json({ summary, status: true });
+  } catch (error) {
+    res.status(400).json({ message: error.message, status: false });
+  }
 });
 
 // @dec    Create a summary
@@ -109,7 +113,7 @@ const deleteSummary = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  getSummaries,
+  getSummary,
   createSummary,
   updateSummary,
   deleteSummary,

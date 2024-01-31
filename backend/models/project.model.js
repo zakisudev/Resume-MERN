@@ -5,7 +5,10 @@ const projectSchema = new Schema(
   {
     title: String,
     description: String,
-    technologies: Array,
+    technologies: {
+      type: [String],
+      required: true,
+    },
     image: {
       type: String,
       default: 'https://chadwindeysel.co.za/img/placeholder.png',
