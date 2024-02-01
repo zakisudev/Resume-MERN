@@ -5,6 +5,10 @@ const socialLinkSchema = new Schema(
   {
     name: String,
     socialLink: String,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

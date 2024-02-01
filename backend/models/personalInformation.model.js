@@ -12,6 +12,10 @@ const personalInformationSchema = new Schema(
     city: String,
     state: String,
     avatar: String,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

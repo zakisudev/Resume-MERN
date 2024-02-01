@@ -12,6 +12,10 @@ const skillsSchema = new Schema(
       // enum: ['frontend', 'backend', 'database', 'other'],
       required: true,
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

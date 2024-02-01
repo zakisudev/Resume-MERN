@@ -14,6 +14,10 @@ const projectSchema = new Schema(
       default: 'https://chadwindeysel.co.za/img/placeholder.png',
     },
     link: String,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,
