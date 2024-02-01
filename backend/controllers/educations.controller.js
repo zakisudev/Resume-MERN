@@ -18,7 +18,7 @@ const getEducations = asyncHandler(async (_, res) => {
 // @route   POST /api/educations
 // @access  Private
 const createEducation = asyncHandler(async (req, res) => {
-  const { schoolName, degree, fieldOfStudy, startDate, endDate, description } =
+  const { schoolName, degree, fieldOfStudy, startYear, endYear, description } =
     req.body;
 
   if (!req.user) {
@@ -26,11 +26,11 @@ const createEducation = asyncHandler(async (req, res) => {
   }
 
   if (
-    !schoolName ||
-    !degree ||
-    !fieldOfStudy ||
-    !startDate ||
-    !endDate ||
+    !schoolName &&
+    !degree &&
+    !fieldOfStudy &&
+    !startYear &&
+    !endYear &&
     !description
   ) {
     res.status(400).json({ message: 'Please fill all fields', status: false });
@@ -41,8 +41,8 @@ const createEducation = asyncHandler(async (req, res) => {
       schoolName,
       degree,
       fieldOfStudy,
-      startDate,
-      endDate,
+      startYear,
+      endYear,
       description,
       userId: req.user._id,
     });
@@ -63,7 +63,7 @@ const createEducation = asyncHandler(async (req, res) => {
 // @route   PUT /api/educations/:id
 // @access  Private
 const updateEducation = asyncHandler(async (req, res) => {
-  const { schoolName, degree, fieldOfStudy, startDate, endDate, description } =
+  const { schoolName, degree, fieldOfStudy, startYear, endYear, description } =
     req.body;
 
   if (!req.user) {
@@ -80,8 +80,8 @@ const updateEducation = asyncHandler(async (req, res) => {
     !schoolName &&
     !degree &&
     !fieldOfStudy &&
-    !startDate &&
-    !endDate &&
+    !startYear &&
+    !endYear &&
     !description
   ) {
     return res
@@ -96,8 +96,8 @@ const updateEducation = asyncHandler(async (req, res) => {
         schoolName,
         degree,
         fieldOfStudy,
-        startDate,
-        endDate,
+        startYear,
+        endYear,
         description,
       },
       { new: true }
