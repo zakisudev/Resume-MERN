@@ -40,7 +40,7 @@ html {
 .theme-switch-wrapper {
   display: flex;
   align-items: center;
-  position: fixed;
+  position: absolute;
   z-index: 100;
   right: 25px;
   top: 15px;
