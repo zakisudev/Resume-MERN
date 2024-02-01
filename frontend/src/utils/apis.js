@@ -10,6 +10,7 @@ import {
   SOCIAL_URL,
 } from '../constants/urls';
 
+// Get Requests
 export const getPersonalInfo = async () => {
   try {
     const res = await axios.get(PERSONAL_INFO_URL);
@@ -108,6 +109,7 @@ export const getProjects = async () => {
   }
 };
 
+// Auth Requests
 export const login = async (user) => {
   try {
     const res = await axios.post(`${AUTH_URL}/login`, user);
@@ -146,5 +148,73 @@ export const getMe = async (userId) => {
   } catch (err) {
     console.error(err);
     return err.message;
+  }
+};
+
+export const updateMe = async (userId, user) => {
+  try {
+    if (!user.avatar) {
+      const res = await axios.put(`${AUTH_URL}/profile/${userId}`, user, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.status) {
+        return res.data;
+      } else {
+        return 'No user found';
+      }
+    } else if (user.avatar) {
+      const res = await axios.put(`${AUTH_URL}/profile/${userId}`, user, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (res.status) {
+        return res?.data;
+      } else {
+        return 'No user found';
+      }
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+// Update requests
+export const updatePersonalInfo = async (personalId, personalInfo) => {
+  if (!personalInfo.avatar) {
+    try {
+      const res = await axios.put(
+        `${PERSONAL_INFO_URL}/${personalId}/`,
+        personalInfo
+      );
+      if (res.status) {
+        return res.data;
+      } else {
+        return 'No personal information found';
+      }
+    } catch (err) {
+      return err?.response?.data;
+    }
+  } else if (personalInfo.avatar) {
+    try {
+      const res = await axios.put(
+        `${PERSONAL_INFO_URL}/${personalId}/`,
+        personalInfo,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      if (res.status) {
+        return res.data;
+      } else {
+        return 'No personal information found';
+      }
+    } catch (err) {
+      return err?.response?.data;
+    }
   }
 };
