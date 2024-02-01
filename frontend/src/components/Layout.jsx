@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = () => {
   const [theme, setTheme] = useState('light');
@@ -20,6 +22,17 @@ const Layout = () => {
       <main className="w-full flex flex-col justify-center items-center">
         <Outlet />
       </main>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss={true}
+        draggable={true}
+        pauseOnHover={true}
+      />
     </div>
   );
 };
