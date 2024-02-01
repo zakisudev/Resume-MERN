@@ -53,17 +53,26 @@ const PersonalForm = () => {
   return (
     <>
       {!personalInfo ? (
-        <div className="personal flex flex-col justify-center p-2">
-          "Loading..."
+        <div className="flex justify-between gap-2">
+          <p className="flex p-2 items-center">No Personal Information Found</p>
+          <button
+            onClick={() => setPerEdit(true)}
+            className="bg-primaryColorLight rounded px-1 text-lg font-semibold text-textBackgroundLight"
+          >
+            Add
+          </button>
         </div>
       ) : (
         <form
           onSubmit={handlePersonalUpdate}
-          className="personal flex flex-col justify-center p-2"
+          className="flex flex-col justify-center p-2"
         >
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="firstName" className="whitespace-nowrap">
+              <label
+                htmlFor="firstName"
+                className="font-semibold whitespace-nowrap"
+              >
                 First Name
               </label>
               <input
@@ -84,7 +93,10 @@ const PersonalForm = () => {
               />
             </div>
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="lastName" className="whitespace-nowrap">
+              <label
+                htmlFor="lastName"
+                className="font-semibold whitespace-nowrap"
+              >
                 Last Name
               </label>
               <input
@@ -108,7 +120,10 @@ const PersonalForm = () => {
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="email" className="whitespace-nowrap">
+              <label
+                htmlFor="email"
+                className="font-semibold whitespace-nowrap"
+              >
                 Email
               </label>
               <input
@@ -126,7 +141,10 @@ const PersonalForm = () => {
               />
             </div>
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="phone" className="whitespace-nowrap">
+              <label
+                htmlFor="phone"
+                className="font-semibold whitespace-nowrap"
+              >
                 Phone
               </label>
               <input
@@ -147,7 +165,10 @@ const PersonalForm = () => {
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="address" className="whitespace-nowrap">
+              <label
+                htmlFor="address"
+                className="font-semibold whitespace-nowrap"
+              >
                 Address
               </label>
               <input
@@ -168,7 +189,7 @@ const PersonalForm = () => {
               />
             </div>
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="city" className="whitespace-nowrap">
+              <label htmlFor="city" className="font-semibold whitespace-nowrap">
                 City
               </label>
               <input
@@ -189,7 +210,10 @@ const PersonalForm = () => {
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="state" className="whitespace-nowrap">
+              <label
+                htmlFor="state"
+                className="font-semibold whitespace-nowrap"
+              >
                 State
               </label>
 
@@ -208,7 +232,10 @@ const PersonalForm = () => {
               />
             </div>
             <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
-              <label htmlFor="profession" className="whitespace-nowrap">
+              <label
+                htmlFor="profession"
+                className="font-semibold whitespace-nowrap"
+              >
                 Profession
               </label>
               <input
@@ -234,7 +261,10 @@ const PersonalForm = () => {
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row items-center">
             <div className="flex gap-1 flex-col items-center sm:flex-row w-full my-1">
-              <label htmlFor="avatar" className="whitespace-nowrap">
+              <label
+                htmlFor="avatar"
+                className="font-semibold whitespace-nowrap"
+              >
                 Avatar
               </label>
               <input
@@ -253,16 +283,19 @@ const PersonalForm = () => {
                 disabled={!perEdit}
               />
             </div>
+
             {!perEdit && (
               <button
+                type="button"
                 onClick={() => setPerEdit(true)}
                 className="bg-primaryColorLight rounded px-1 text-lg font-semibold text-textBackgroundLight"
               >
                 Edit
               </button>
             )}
+
             {perEdit && (
-              <>
+              <div className="flex justify-center gap-2">
                 <button
                   type="submit"
                   disabled={loading}
@@ -276,7 +309,7 @@ const PersonalForm = () => {
                 >
                   Cancel
                 </button>
-              </>
+              </div>
             )}
 
             {errorMsg && <p className="text-red-700 text-center">{errorMsg}</p>}

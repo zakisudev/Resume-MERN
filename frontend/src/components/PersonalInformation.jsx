@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 
 const PersonalInformation = ({ personal, theme }) => {
   return (
-    <div className="my-2">
+    <div className="my-4">
       <div className="flex flex-col sm:flex-row w-full justify-center gap-5">
         <div className="w-full sm:w-1/2 flex justify-center items-center">
           <img
             src={personal[0]?.avatar}
             alt="avatar"
-            className="rounded-full w-60 h-60 object-cover"
+            className="rounded-full w-40 h-40 object-cover"
           />
         </div>
         <div className="w-full sm:w-1/2 flex flex-col justify-center">
