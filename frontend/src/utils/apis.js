@@ -218,3 +218,29 @@ export const updatePersonalInfo = async (personalId, personalInfo) => {
     }
   }
 };
+
+export const addEducation = async (education) => {
+  try {
+    const res = await axios.post(`${EDUCATION_URL}`, education);
+    if (res.status) {
+      return res.data;
+    } else {
+      return 'No education found';
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const updateEducation = async (educationId, education) => {
+  try {
+    const res = await axios.put(`${EDUCATION_URL}/${educationId}`, education);
+    if (res.status) {
+      return res.data;
+    } else {
+      return 'No education found';
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
