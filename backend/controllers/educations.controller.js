@@ -44,6 +44,7 @@ const createEducation = asyncHandler(async (req, res) => {
       startDate,
       endDate,
       description,
+      userId: req.user._id,
     });
 
     if (!education) {

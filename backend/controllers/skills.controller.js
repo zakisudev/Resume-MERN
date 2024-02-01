@@ -32,6 +32,7 @@ const createSkill = asyncHandler(async (req, res) => {
     const skill = await Skill.create({
       skill,
       type,
+      userId: req.user._id,
     });
 
     if (!skill) {

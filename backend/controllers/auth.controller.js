@@ -122,42 +122,40 @@ const getMe = asyncHandler(async (req, res) => {
 // @route   PUT /api/auth/profile/:id
 // @access  Private
 const updateMe = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email } = req.body;
+
   if (!req.user) {
-    res.status(404).json({ message: 'User not found', status: false });
+    return res.status(404).json({ message: 'User not found', status: false });
   }
 
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(404).json({ message: 'Invalid user Id', status: false });
+    return res.status(404).json({ message: 'Invalid user Id', status: false });
   }
 
-  if (!username || !email || !password) {
-    res
+  if (!username && !email && !req.file) {
+    return res
       .status(400)
       .json({ message: 'Please fill at least one field', status: false });
   }
 
   try {
-    const updatedMe = await Me.findOneAndUpdate(
-      {
-        _id: req.params.id,
-      },
-      {
-        username,
-        email,
-        password: await hashPassword(password),
-      }
-    );
+    const updatedMe = await Me.findById(req.params.id);
 
     if (!updatedMe) {
-      res.status(404).json({ message: 'User not updated', status: false });
+      return res
+        .status(404)
+        .json({ message: 'User not updated', status: false });
     }
+
+    if (username) updatedMe.username = username;
+    if (email) updatedMe.email = email;
+    if (req.file) updatedMe.avatar = req.file.path;
+
+    await updatedMe.save();
 
     res.status(200).json({ profile: updatedMe, status: true });
   } catch (error) {
-    res
-      .status(404)
-      .json({ message: 'Error ocurred, try again later', status: false });
+    return res.status(404).json({ message: error.message, status: false });
   }
 });
 
@@ -186,9 +184,7 @@ const deleteMe = asyncHandler(async (req, res) => {
       .status(200)
       .json({ message: 'User deleted successfully', status: true });
   } catch (error) {
-    res
-      .status(404)
-      .json({ message: 'Error ocurred, try again later', status: false });
+    res.status(404).json({ message: error.message, status: false });
   }
 });
 

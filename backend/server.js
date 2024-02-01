@@ -34,5 +34,8 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/social-links', socialRoutes);
 app.use('/api/summary', summaryRoutes);
 
+// Serve static assets
+app.use('/uploads', express.static('./uploads/'));
+
 // Listen to the port
 app.listen(port, () => console.log(`Server running on port ${port}`));

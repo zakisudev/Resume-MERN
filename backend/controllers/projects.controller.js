@@ -35,6 +35,7 @@ const createProject = asyncHandler(async (req, res) => {
       link,
       image,
       technologies,
+      userId: req.user._id,
     });
 
     if (!project) {

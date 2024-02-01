@@ -23,6 +23,7 @@ const createSocialLink = asyncHandler(async (req, res) => {
   try {
     const createdSocialLink = await SocialLink.create({
       socialLink,
+      userId: req.user._id,
     });
 
     if (!createdSocialLink) {

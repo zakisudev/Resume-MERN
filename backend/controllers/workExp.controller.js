@@ -76,6 +76,7 @@ const createWorkExperience = asyncHandler(async (req, res) => {
       description,
       city,
       state,
+      userId: req.user._id,
     });
 
     if (!createdWorkExperience) {

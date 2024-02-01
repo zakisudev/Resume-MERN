@@ -29,7 +29,10 @@ const createSummary = asyncHandler(async (req, res) => {
   }
 
   try {
-    const createdSummary = await Summary.create({ summary });
+    const createdSummary = await Summary.create({
+      summary,
+      userId: req.user._id,
+    });
     if (!createdSummary) {
       res
         .status(400)
