@@ -181,7 +181,7 @@ export const updateMe = async (userId, user) => {
   }
 };
 
-// Update requests
+// Add and Update requests
 export const updatePersonalInfo = async (personalId, personalInfo) => {
   if (!personalInfo.avatar) {
     try {
@@ -239,6 +239,45 @@ export const updateEducation = async (educationId, education) => {
       return res.data;
     } else {
       return 'No education found';
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const addSummary = async (summary) => {
+  try {
+    const res = await axios.post(`${SUMMARY_URL}`, summary);
+    if (res.status) {
+      return res.data;
+    } else {
+      return 'No summary found';
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const updateSummary = async (summaryId, summary) => {
+  try {
+    const res = await axios.put(`${SUMMARY_URL}/${summaryId}`, summary);
+    if (res.status) {
+      return res.data;
+    } else {
+      return 'No summary found';
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const addSocialLinks = async (social) => {
+  try {
+    const res = await axios.post(SOCIAL_URL, social);
+    if (res.status) {
+      return res.data;
+    } else {
+      return 'No social link found';
     }
   } catch (err) {
     return err?.response?.data;
