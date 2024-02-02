@@ -64,7 +64,6 @@ const Home = ({ theme }) => {
     fetchPersonal();
   }, []);
 
-  console.log(socialLinks);
   return (
     <>
       {/* Profile */}
