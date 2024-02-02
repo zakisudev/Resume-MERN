@@ -5,31 +5,32 @@ import {
   FaLinkedin,
   FaTwitter,
 } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const SocialLinks = ({ socialLinks }) => {
   return (
-    <div className="my-2">
+    <div className="my-4">
       <ul className="flex flex-row justify-center items-center space-x-4">
-        {socialLinks?.map((socialLink) => (
-          <li key={socialLink.id}>
-            <a
-              href={socialLink.url}
+        {socialLinks[0]?.socialLink?.map((sl) => (
+          <li key={sl.id}>
+            <Link
+              to={sl?.link}
               target="_blank"
               rel="noopener noreferrer"
               className="text-2xl"
             >
-              {socialLink?.name === 'github'
+              {sl?.socialName === 'github'
                 ? <FaGithub /> || 'Github'
-                : socialLink?.name === 'linkedin'
+                : sl?.socialName === 'linkedin'
                 ? <FaLinkedin /> || 'LinkedIn'
-                : socialLink?.name === 'twitter'
+                : sl?.socialName === 'twitter'
                 ? <FaTwitter /> || 'Twitter'
-                : socialLink?.name === 'facebook'
+                : sl?.socialName === 'facebook'
                 ? <FaFacebook /> || 'Facebook'
-                : socialLink?.name === 'instagram'
+                : sl?.socialName === 'instagram'
                 ? <FaInstagram /> || 'Instagram'
                 : ''}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

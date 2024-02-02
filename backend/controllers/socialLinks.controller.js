@@ -18,56 +18,48 @@ const getSocialLinks = asyncHandler(async (req, res) => {
 // @route   POST /api/socialLinks
 // @access  Private
 const createSocialLink = asyncHandler(async (req, res) => {
-  const { socialLink } = req.body;
-
-  try {
-    const createdSocialLink = await SocialLink.create({
-      socialLink,
-      userId: req.user._id,
-    });
-
-    if (!createdSocialLink) {
-      res
-        .status(400)
-        .json({ message: 'Unable to create social link', status: false });
-    }
-
-    res.status(201).json({ createdSocialLink, status: true });
-  } catch (error) {
-    res.status(400).json({ message: error.message, status: false });
-  }
-});
-
-// @desc    Update a social link
-// @route   PUT /api/socialLinks/:id
-// @access  Private
-const updateSocialLink = asyncHandler(async (req, res) => {
-  const { socialLink } = req.body;
+  const { link, socialName } = req.body;
 
   if (!req.user) {
     res.status(401).json({ message: 'Not authorized', status: false });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).json({ message: 'Invalid social link id', status: false });
-  }
-
   try {
-    const updatedSocialLink = await SocialLink.findOneAndUpdate(
-      { _id: req.params.id },
-      {
-        socialLink,
-      },
-      { new: true }
-    );
+    const sl = await SocialLink.findOne({ userId: req.user._id });
 
-    if (!updatedSocialLink) {
-      res
-        .status(400)
-        .json({ message: 'Unable to update social link', status: false });
+    if (!sl) {
+      const newSocialLink = new SocialLink({
+        socialLink: [
+          {
+            socialName,
+            link,
+          },
+        ],
+        userId: req.user._id,
+      });
+
+      await newSocialLink.save();
+
+      return res.status(201).json({ newSocialLink, status: true });
+    } else {
+      let found = false;
+      const updatedSocialLink = sl.socialLink.map((s) => {
+        if (s.socialName === socialName) {
+          found = true;
+          return { socialName, link };
+        }
+        return s;
+      });
+
+      if (!found) {
+        updatedSocialLink.push({ socialName, link });
+      }
+
+      sl.socialLink = updatedSocialLink;
+      await sl.save();
+
+      return res.status(201).json({ sl, status: true });
     }
-
-    res.status(200).json({ updatedSocialLink, status: true });
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
   }
@@ -105,6 +97,5 @@ const deleteSocialLink = asyncHandler(async (req, res) => {
 module.exports = {
   getSocialLinks,
   createSocialLink,
-  updateSocialLink,
   deleteSocialLink,
 };
