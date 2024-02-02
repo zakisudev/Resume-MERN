@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 const SocialLinks = ({ socialLinks }) => {
   return (
-    <div className="my-4">
+    <div className="w-full">
       <ul className="flex flex-row justify-center items-center space-x-4">
         {socialLinks[0]?.socialLink?.map((sl) => (
           <li key={sl.id}>

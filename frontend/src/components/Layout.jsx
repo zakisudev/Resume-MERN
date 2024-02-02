@@ -19,7 +19,7 @@ const Layout = () => {
   return (
     <div className="min-h-screen">
       <Header toggleTheme={toggleTheme} theme={theme} />
-      <main className="w-full flex flex-col justify-center items-center">
+      <main className="w-[80%] flex flex-col justify-center items-center mx-auto">
         <Outlet />
       </main>
       <ToastContainer

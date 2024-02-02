@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const PersonalInformation = ({ personal, theme }) => {
   return (
-    <div className="my-4">
+    <div className="py-4 w-full">
       <div className="flex flex-col sm:flex-row w-full justify-center gap-5">
         <div className="w-full sm:w-1/2 flex justify-center items-center">
           <img
@@ -16,11 +16,11 @@ const PersonalInformation = ({ personal, theme }) => {
           <h1
             className={`${
               theme === '' && 'text-primaryColorDark'
-            } text-5xl font-bold whitespace-nowrap`}
+            } text-3xl font-bold whitespace-nowrap`}
           >
             {personal[0]?.firstName} {personal[0]?.lastName}
           </h1>
-          <p className="text-3xl font-medium">{personal[0]?.profession}</p>
+          <p className="text-2xl font-medium">{personal[0]?.profession}</p>
           <p className="text-lg">{personal[0]?.address}</p>
           <Link
             to={`mailto:${personal[0]?.email}?subject=Regarding Resume viewing&body=Hi there Zak,`}

@@ -1,7 +1,7 @@
 const Summary = ({ summary }) => {
   return (
-    <div className="my-2">
-      <p className="flex flex-row justify-center items-center text-center text-lg w-[70%] mx-auto">
+    <div className="py-4 border-b-2 border-primaryColorLight w-full">
+      <p className="flex flex-row justify-center items-center text-center text-md font-semibold w-[70%] mx-auto">
         {summary?.summary}
       </p>
     </div>
