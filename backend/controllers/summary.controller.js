@@ -80,7 +80,7 @@ const updateSummary = asyncHandler(async (req, res) => {
         .json({ message: 'Unable to update summary', status: false });
     }
 
-    res.status(200).json(updatedSummary);
+    res.status(200).json({ updatedSummary, status: true });
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
   }
