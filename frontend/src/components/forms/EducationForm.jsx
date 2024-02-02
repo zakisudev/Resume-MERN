@@ -23,8 +23,12 @@ const EducationForm = () => {
 
   useEffect(() => {
     const fetchEducations = async () => {
-      const educations = await getEducations();
-      setEducations(educations);
+      try {
+        const educations = await getEducations();
+        setEducations(educations);
+      } catch (error) {
+        console.error(error);
+      }
     };
     fetchEducations();
   }, [educationModal, educationEdit]);

@@ -65,10 +65,10 @@ const PersonalForm = () => {
       ) : (
         <form
           onSubmit={handlePersonalUpdate}
-          className="flex flex-col justify-center p-2"
+          className="flex flex-col justify-center"
         >
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="firstName"
                 className="font-semibold whitespace-nowrap"
@@ -79,7 +79,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="firstName"
                 id="firstName"
                 value={personalData?.firstName || personalInfo?.firstName || ''}
@@ -92,7 +92,7 @@ const PersonalForm = () => {
                 disabled={!perEdit}
               />
             </div>
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="lastName"
                 className="font-semibold whitespace-nowrap"
@@ -103,7 +103,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="lastName"
                 id="lastName"
                 value={personalData?.lastName || personalInfo?.lastName || ''}
@@ -119,7 +119,7 @@ const PersonalForm = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="email"
                 className="font-semibold whitespace-nowrap"
@@ -130,7 +130,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="email"
                 id="email"
                 value={personalData?.email || personalInfo?.email || ''}
@@ -140,7 +140,7 @@ const PersonalForm = () => {
                 disabled={!perEdit}
               />
             </div>
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="phone"
                 className="font-semibold whitespace-nowrap"
@@ -151,7 +151,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="phone"
                 id="phone"
                 value={personalData?.phone || personalInfo?.phone || ''}
@@ -164,7 +164,7 @@ const PersonalForm = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="address"
                 className="font-semibold whitespace-nowrap"
@@ -175,7 +175,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="address"
                 id="address"
                 value={personalData?.address || personalInfo?.address || ''}
@@ -188,7 +188,7 @@ const PersonalForm = () => {
                 disabled={!perEdit}
               />
             </div>
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label htmlFor="city" className="font-semibold whitespace-nowrap">
                 City
               </label>
@@ -196,7 +196,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="city"
                 id="city"
                 value={personalData?.city || personalInfo?.city || ''}
@@ -209,7 +209,7 @@ const PersonalForm = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="state"
                 className="font-semibold whitespace-nowrap"
@@ -221,7 +221,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="state"
                 id="state"
                 value={personalData?.state || personalInfo?.state || ''}
@@ -231,7 +231,7 @@ const PersonalForm = () => {
                 disabled={!perEdit}
               />
             </div>
-            <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="profession"
                 className="font-semibold whitespace-nowrap"
@@ -242,7 +242,7 @@ const PersonalForm = () => {
                 type="text"
                 className={`${
                   !perEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="profession"
                 id="profession"
                 value={
@@ -260,7 +260,7 @@ const PersonalForm = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full justify-between sm:flex-row items-center">
-            <div className="flex gap-1 flex-col items-center sm:flex-row w-full my-1">
+            <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
               <label
                 htmlFor="avatar"
                 className="font-semibold whitespace-nowrap"
@@ -271,7 +271,7 @@ const PersonalForm = () => {
                 type="file"
                 className={`${
                   !perEdit && 'cursor-not-allowed bg-gray-200'
-                } flex px-2 py-1 rounded border border-gray-500`}
+                } flex px-2 py-1 rounded border border-gray-500 w-40`}
                 name="avatar"
                 id="avatar"
                 onChange={(e) =>
@@ -304,6 +304,7 @@ const PersonalForm = () => {
                   {loading ? 'Loading...' : 'Save'}
                 </button>
                 <button
+                  type="button"
                   onClick={() => setPerEdit(false)}
                   className="bg-red-700 rounded px-1 text-lg font-semibold text-textBackgroundLight"
                 >
