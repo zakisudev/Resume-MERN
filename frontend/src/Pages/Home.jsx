@@ -39,7 +39,7 @@ const Home = ({ theme }) => {
     };
     const fetchSummary = async () => {
       const summaryFromServer = await getSummary();
-      setSummary(summaryFromServer);
+      setSummary(summaryFromServer[0]);
       fetchEducation();
     };
     const fetchEducation = async () => {
@@ -64,8 +64,10 @@ const Home = ({ theme }) => {
     fetchPersonal();
   }, []);
 
+  console.log(socialLinks);
   return (
     <>
+      {/* Profile */}
       {/* Personal Information */}
       <PersonalInformation personal={personal} theme={theme} />
       {/* Social links */}
