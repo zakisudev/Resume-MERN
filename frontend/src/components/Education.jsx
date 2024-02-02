@@ -21,7 +21,7 @@ const Education = ({ education }) => {
             <p className="text-md">
               {edu?.startYear} - {edu?.endYear}
             </p>
-            {edu?.description && <p className="text-md">{edu?.description}</p>}
+            {edu?.description && <p className="text-sm">{edu?.description}</p>}
           </li>
         ))}
       </ul>
