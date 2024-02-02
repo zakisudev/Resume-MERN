@@ -3,8 +3,18 @@ const Schema = mongoose.Schema;
 
 const socialLinkSchema = new Schema(
   {
-    name: String,
-    socialLink: String,
+    socialLink: [
+      {
+        socialName: {
+          type: String,
+          required: true,
+        },
+        link: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',

@@ -4,11 +4,10 @@ const protect = require('../middlewares/authMiddleware');
 const {
   getSocialLinks,
   createSocialLink,
-  updateSocialLink,
   deleteSocialLink,
 } = require('../controllers/socialLinks.controller');
 
 router.route('/').get(getSocialLinks).post(protect, createSocialLink);
-router.route('/:id').put(protect, updateSocialLink, deleteSocialLink);
+router.route('/:id').put(protect, deleteSocialLink);
 
 module.exports = router;
