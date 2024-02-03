@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import Home from './Pages/Home';
-import Layout from './components/Layout';
+import Layout from './components/common/Layout';
 import Admin from './Pages/Admin';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
