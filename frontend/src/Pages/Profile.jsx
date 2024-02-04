@@ -3,15 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getMe } from '../utils/apis';
 import { FaHome, FaPrint, FaTrash, FaUser } from 'react-icons/fa';
 import { format } from 'date-fns';
-import ProfileEditModal from '../components/forms/ProfileEditModal';
-import ResumeEdit from './ResumeEdit';
+import ProfileEditModal from '../components/modals/ProfileEditModal';
+import Loader from '../components/common/Loader';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const [profile, setProfile] = useState({});
   const user = localStorage.getItem('token');
+  const [profile, setProfile] = useState({});
   const [profileEditView, setProfileEditView] = useState(false);
-  const [resumeEditView, setResumeEditView] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!user) {
@@ -21,28 +22,39 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const res = await getMe(user);
-      if (!res?.status && !user) {
-        navigate('/admin/login', { replace: true });
+      try {
+        setError('');
+        setLoading(true);
+        const res = await getMe(user);
+        if (!res?.status && !user) {
+          return navigate('/admin/login', { replace: true });
+        }
+        setProfile(res?.profile);
+      } catch (error) {
+        setError(error?.message);
+      } finally {
+        setLoading(false);
+        return;
       }
-      setProfile(res?.profile);
     };
     fetchProfile();
-  }, [profileEditView]);
+  }, [profileEditView, navigate, user]);
 
   return (
     <>
-      {user && profile && (
-        <>
-          {profileEditView && (
-            <ProfileEditModal
-              profile={profile}
-              setProfileEditView={setProfileEditView}
-            />
-          )}
+      {profileEditView && (
+        <ProfileEditModal
+          profile={profile}
+          setProfileEditView={setProfileEditView}
+        />
+      )}
 
-          {resumeEditView && <ResumeEdit user={user} />}
-
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <p className="text-center text-red-700 p-2">{error}</p>
+      ) : (
+        profile && (
           <div className="flex flex-col w-[90%] gap-3">
             <div className="flex justify-center items-center w-full mx-auto rounded-lg h-36 bg-gradient-to-r from-primaryColorLight/60 to-primaryVariantColorDark/60">
               <img
@@ -88,7 +100,7 @@ const Profile = () => {
                 className="px-3 py-1 bg-red-700 rounded flex items-center justify-center w-full sm:w-auto gap-2 text-textPrimaryDark hover:bg-red-900 hover:scale-105 transition-all duration-300 ease-in-out"
               >
                 <FaTrash />{' '}
-                <span className="whitespace-nowrap text-md sm:text-xl">
+                <span className="whitespace-nowrap text-sm sm:text-md">
                   Delete Account
                 </span>
               </button>
@@ -122,7 +134,7 @@ const Profile = () => {
               </div>
             </div>
           </div>
-        </>
+        )
       )}
     </>
   );
