@@ -149,7 +149,7 @@ const updateMe = asyncHandler(async (req, res) => {
 
     if (username) updatedMe.username = username;
     if (email) updatedMe.email = email;
-    if (req.file) updatedMe.avatar = req.file.path;
+    if (req.file) updatedMe.avatar = req.file?.path;
 
     await updatedMe.save();
 
