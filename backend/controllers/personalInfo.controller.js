@@ -3,11 +3,14 @@ const PersonalInformation = require('../models/personalInformation.model');
 const mongoose = require('mongoose');
 
 // @desc    Get all personal information
-// @route   GET /api/personals
+// @route   GET /api/personals/:id
 // @access  Public
-const getPersonalInformation = asyncHandler(async (_, res) => {
+const getPersonalInformation = asyncHandler(async (req, res) => {
+  const uId = req.params?.id;
   try {
-    const personal = await PersonalInformation.find({});
+    const personal = await PersonalInformation.findOne({
+      userId: uId,
+    });
     res.status(200).json({ personal, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
@@ -18,7 +21,17 @@ const getPersonalInformation = asyncHandler(async (_, res) => {
 // @route   POST /api/personals
 // @access  Private
 const createPersonalInformation = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, phone, address, city, state } = req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    country,
+    address,
+    city,
+    state,
+    profession,
+  } = req.body;
 
   if (!req.user) {
     res.status(401).json({ message: 'Unauthorized', status: false });
@@ -29,24 +42,43 @@ const createPersonalInformation = asyncHandler(async (req, res) => {
     !lastName ||
     !email ||
     !phone ||
+    !country ||
     !address ||
     !city ||
-    !state
+    !state ||
+    !profession
   ) {
     res.status(400).json({ message: 'Please fill all fields', status: false });
   }
 
   try {
-    const personalInformation = await PersonalInformation.create({
-      firstName,
-      lastName,
-      email,
-      phone,
-      address,
-      city,
-      state,
+    const existingPersonalInformation = await PersonalInformation.findOne({
+      userId: req.user?._id,
+    });
+
+    if (existingPersonalInformation) {
+      res.status(400).json({
+        message: 'Personal information already exists',
+        status: false,
+      });
+    }
+
+    const newPersonalInfo = new PersonalInformation({
+      PersonalInfo: {
+        firstName,
+        lastName,
+        email,
+        phone,
+        country,
+        address,
+        city,
+        state,
+        profession,
+      },
       userId: req.user._id,
     });
+
+    const personalInformation = await newPersonalInfo.save();
 
     if (!personalInformation) {
       res.status(400).json({
@@ -54,6 +86,8 @@ const createPersonalInformation = asyncHandler(async (req, res) => {
         status: false,
       });
     }
+
+    await personalInformation.save();
 
     res.status(201).json({ personalInformation, status: true });
   } catch (error) {
@@ -65,7 +99,17 @@ const createPersonalInformation = asyncHandler(async (req, res) => {
 // @route   PUT /api/personal-info/:id
 // @access  Private
 const updatePersonalInformation = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, phone, address, city, state } = req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    city,
+    state,
+    country,
+    profession,
+  } = req.body;
 
   if (!req.user) {
     return res.status(401).json({ message: 'Unauthorized', status: false });
@@ -83,17 +127,19 @@ const updatePersonalInformation = asyncHandler(async (req, res) => {
     !address &&
     !city &&
     !state &&
+    !country &&
+    !profession &&
     !req.file
   ) {
     return res
       .status(400)
-      .json({ message: 'Please fill at least one field', status: false });
+      .json({ message: 'Please change at least one field', status: false });
   }
 
   try {
-    const personalInformation = await PersonalInformation.findById(
-      req.params.id
-    );
+    const personalInformation = await PersonalInformation.findOne({
+      userId: req.params.id,
+    });
 
     if (!personalInformation) {
       return res.status(404).json({
@@ -106,19 +152,26 @@ const updatePersonalInformation = asyncHandler(async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized', status: false });
     }
 
-    console.log(req.file);
-    if (firstName) personalInformation.firstName = firstName;
-    if (lastName) personalInformation.lastName = lastName;
-    if (email) personalInformation.email = email;
-    if (phone) personalInformation.phone = phone;
-    if (address) personalInformation.address = address;
-    if (city) personalInformation.city = city;
-    if (state) personalInformation.state = state;
-    if (req.file) personalInformation.avatar = req.file.path;
+    const updatedInfo = {
+      firstName: firstName || personalInformation.PersonalInfo[0].firstName,
+      lastName: lastName || personalInformation.PersonalInfo[0].lastName,
+      email: email || personalInformation.PersonalInfo[0].email,
+      phone: phone || personalInformation.PersonalInfo[0].phone,
+      address: address || personalInformation.PersonalInfo[0].address,
+      city: city || personalInformation.PersonalInfo[0].city,
+      state: state || personalInformation.PersonalInfo[0].state,
+      country: country || personalInformation.PersonalInfo[0].country,
+      profession: profession || personalInformation.PersonalInfo[0].profession,
+    };
 
-    const updatedInformation = await personalInformation.save();
+    personalInformation.PersonalInfo = updatedInfo;
 
-    res.status(200).json({ updatedInformation, status: true });
+    const updatedPersonalInformation = await personalInformation.save();
+
+    res.status(200).json({
+      personalInformation: updatedPersonalInformation,
+      status: true,
+    });
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
   }
