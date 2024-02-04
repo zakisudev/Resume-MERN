@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { addSocialLinks } from '../../utils/apis';
+import { updateSocialLinks } from '../../utils/apis';
 import { toast } from 'react-toastify';
 
 const SocialEditModal = ({ setSocialEdit, social }) => {
+  const userId = localStorage.getItem('token');
   const [socialData, setSocialData] = useState({
     socialName: social?.socialName || '',
     link: social?.link || '',
@@ -27,7 +28,7 @@ const SocialEditModal = ({ setSocialEdit, social }) => {
     };
     try {
       setError('');
-      const res = await addSocialLinks(data);
+      const res = await updateSocialLinks(userId, data);
       if (res.status) {
         toast.success('Social link edited successfully');
         setSocialEdit(false);
@@ -43,7 +44,7 @@ const SocialEditModal = ({ setSocialEdit, social }) => {
   };
 
   return (
-    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/80 fixed h-screen w-full">
+    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/40 fixed h-screen w-full">
       <div className="flex justify-center items-center w-full h-screen">
         <form
           onSubmit={handleEditSocialLink}
@@ -67,7 +68,7 @@ const SocialEditModal = ({ setSocialEdit, social }) => {
                 <option value="" disabled>
                   Select Social Media
                 </option>
-                {social[0]?.socialLink?.map((s) => (
+                {social?.map((s) => (
                   <option key={s?._id} value={s?.link}>
                     {s?.socialName}
                   </option>

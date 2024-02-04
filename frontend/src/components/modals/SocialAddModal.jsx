@@ -42,7 +42,7 @@ const SocialAddModal = ({ setSocialModal }) => {
   };
 
   return (
-    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/80 fixed h-screen w-full">
+    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/40 fixed h-screen w-full">
       <div className="flex justify-center items-center w-full h-screen">
         <form
           onSubmit={handleAddSocialLink}
@@ -54,7 +54,7 @@ const SocialAddModal = ({ setSocialModal }) => {
                 htmlFor="summary"
                 className="font-semibold whitespace-nowrap text-xl "
               >
-                Edit Social links
+                Add Social links
               </label>
               <select
                 className="flex px-2 py-1 rounded border border-gray-500 w-full"
