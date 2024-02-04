@@ -1,8 +1,11 @@
 import { FaMailBulk, FaPhone } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import Loader from './common/Loader';
 
 const PersonalInformation = ({ personal, theme }) => {
-  return (
+  return !personal[0] ? (
+    <Loader />
+  ) : (
     <div className="py-4 w-full">
       <div className="flex flex-col sm:flex-row w-full justify-center gap-5">
         <div className="w-full sm:w-1/2 flex justify-center items-center">
@@ -21,7 +24,9 @@ const PersonalInformation = ({ personal, theme }) => {
             {personal[0]?.firstName} {personal[0]?.lastName}
           </h1>
           <p className="text-2xl font-medium">{personal[0]?.profession}</p>
-          <p className="text-lg">{personal[0]?.address}</p>
+          <p className="text-lg">
+            {personal[0]?.address}, {personal[0]?.state} {personal[0]?.city}
+          </p>
           <Link
             to={`mailto:${personal[0]?.email}?subject=Regarding Resume viewing&body=Hi there Zak,`}
             className="text-primaryColorLight text-md font-semibold flex items-center gap-2"
