@@ -3,11 +3,14 @@ const SocialLink = require('../models/socialLink.model');
 const mongoose = require('mongoose');
 
 // @desc    Fetch all social links
-// @route   GET /api/socialLinks
+// @route   GET /api/socialLinks/:id
 // @access  Public
 const getSocialLinks = asyncHandler(async (req, res) => {
+  const uId = req.params.id;
   try {
-    const socials = await SocialLink.find({});
+    const socials = await SocialLink.findOne({
+      userId: uId,
+    });
     res.status(200).json({ socials, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
@@ -24,12 +27,16 @@ const createSocialLink = asyncHandler(async (req, res) => {
     res.status(401).json({ message: 'Not authorized', status: false });
   }
 
+  if (!link || !socialName) {
+    res.status(400).json({ message: 'Please fill all fields', status: false });
+  }
+
   try {
     const sl = await SocialLink.findOne({ userId: req.user._id });
 
     if (!sl) {
-      const newSocialLink = new SocialLink({
-        socialLink: [
+      const newSocialLink = await SocialLink.create({
+        SocialLink: [
           {
             socialName,
             link,
@@ -38,28 +45,75 @@ const createSocialLink = asyncHandler(async (req, res) => {
         userId: req.user._id,
       });
 
-      await newSocialLink.save();
+      return res.status(201).json({ socials: newSocialLink, status: true });
+    }
 
-      return res.status(201).json({ newSocialLink, status: true });
-    } else {
-      let found = false;
-      const updatedSocialLink = sl.socialLink.map((s) => {
-        if (s.socialName === socialName) {
-          found = true;
-          return { socialName, link };
-        }
-        return s;
-      });
+    const existingLink = sl.SocialLink.find((s) => s.socialName === socialName);
 
-      if (!found) {
-        updatedSocialLink.push({ socialName, link });
-      }
-
-      sl.socialLink = updatedSocialLink;
+    if (sl && existingLink) {
+      res
+        .status(400)
+        .json({ message: 'Social link already exists', status: false });
+    } else if (sl && !existingLink) {
+      sl.SocialLink.push({ socialName, link });
       await sl.save();
 
-      return res.status(201).json({ sl, status: true });
+      return res.status(201).json({ socials: sl, status: true });
     }
+  } catch (error) {
+    res.status(400).json({ message: error.message, status: false });
+  }
+});
+
+// @desc    Update a social link
+// @route   PUT /api/socialLinks/:id
+// @access  Private
+const updateSocialLink = asyncHandler(async (req, res) => {
+  const { link, socialName } = req.body;
+
+  if (!req.user) {
+    return res.status(401).json({ message: 'Not authorized', status: false });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res
+      .status(400)
+      .json({ message: 'Invalid social link id', status: false });
+  }
+
+  if (req.user._id.toString() !== req.params.id) {
+    return res.status(401).json({ message: 'Not authorized', status: false });
+  }
+
+  if (!link && !socialName) {
+    return res
+      .status(400)
+      .json({ message: 'Please change at least one field', status: false });
+  }
+
+  try {
+    const sl = await SocialLink.findOne({ userId: req.params.id });
+
+    if (!sl) {
+      res
+        .status(404)
+        .json({ message: 'Social links not found', status: false });
+    }
+
+    const existingLink = sl.SocialLink.find((s) => s.socialName === socialName);
+
+    if (sl && !existingLink) {
+      res.status(400).json({ message: 'Social link not found', status: false });
+    }
+
+    const updatedLink = sl.SocialLink.map((s) =>
+      s.socialName === socialName ? { ...s, link } : s
+    );
+
+    sl.SocialLink = updatedLink;
+    await sl.save();
+
+    res.status(200).json({ socials: sl, status: true });
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
   }
@@ -97,5 +151,6 @@ const deleteSocialLink = asyncHandler(async (req, res) => {
 module.exports = {
   getSocialLinks,
   createSocialLink,
+  updateSocialLink,
   deleteSocialLink,
 };

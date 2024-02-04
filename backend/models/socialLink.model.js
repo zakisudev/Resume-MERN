@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const socialLinkSchema = new Schema(
   {
-    socialLink: [
+    SocialLink: [
       {
         socialName: {
           type: String,
@@ -18,6 +18,7 @@ const socialLinkSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
     },
   },
   {
