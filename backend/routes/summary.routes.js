@@ -8,6 +8,6 @@ const {
 } = require('../controllers/summary.controller');
 
 router.route('/').get(getSummary).post(protect, createSummary);
-router.route('/:id').put(protect, updateSummary);
+router.route('/:id').get(getSummary).put(protect, updateSummary);
 
 module.exports = router;

@@ -29,17 +29,26 @@ const createSummary = asyncHandler(async (req, res) => {
   }
 
   try {
+    const existingSummary = await Summary.findOne({ userId: req.user._id });
+
+    if (existingSummary) {
+      return res
+        .status(400)
+        .json({ message: 'Summary already exists', status: false });
+    }
+
     const createdSummary = await Summary.create({
       summary,
       userId: req.user._id,
     });
+
     if (!createdSummary) {
       res
         .status(400)
         .json({ message: 'Unable to create summary', status: false });
     }
 
-    res.status(201).json(createdSummary);
+    res.status(201).json({ summary: createdSummary, status: true });
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
   }
@@ -68,11 +77,17 @@ const updateSummary = asyncHandler(async (req, res) => {
   }
 
   try {
-    const updatedSummary = await Summary.findByIdAndUpdate(
-      req.params.id,
-      { summary },
-      { new: true }
-    );
+    const existingSummary = await Summary.findOne({ userId: req.user._id });
+
+    if (!existingSummary) {
+      return res
+        .status(404)
+        .json({ message: 'Summary not found', status: false });
+    }
+
+    const updatedSummary = await existingSummary.updateOne({
+      summary,
+    });
 
     if (!updatedSummary) {
       res
@@ -80,7 +95,7 @@ const updateSummary = asyncHandler(async (req, res) => {
         .json({ message: 'Unable to update summary', status: false });
     }
 
-    res.status(200).json({ updatedSummary, status: true });
+    res.status(200).json({ summary: updatedSummary, status: true });
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
   }
