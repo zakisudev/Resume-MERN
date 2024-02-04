@@ -8,9 +8,10 @@ const {
   deleteEducation,
 } = require('../controllers/educations.controller');
 
-router.route('/').get(getEducations).post(protect, createEducation);
+router.route('/').post(protect, createEducation);
 router
   .route('/:id')
+  .get(getEducations)
   .put(protect, updateEducation)
   .delete(protect, deleteEducation);
 
