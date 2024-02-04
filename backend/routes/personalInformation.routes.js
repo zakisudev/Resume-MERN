@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.route('/').get(getPersonalInformation);
+router.route('/:id').get(getPersonalInformation);
 router.route('/').post(protect, createPersonalInformation);
 router
   .route('/:id')
