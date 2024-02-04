@@ -12,7 +12,7 @@ const {
 router.route('/').get(getWorkExperiences).post(protect, createWorkExperience);
 router
   .route('/:id')
-  .get(getWorkExperienceById)
+  .get(protect, getWorkExperienceById)
   .put(protect, updateWorkExperience)
   .delete(protect, deleteWorkExperience);
 

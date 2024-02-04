@@ -18,20 +18,28 @@ const getWorkExperiences = asyncHandler(async (req, res) => {
 // @route   GET /api/workExp/:id
 // @access  Public
 const getWorkExperienceById = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Not authorized', status: false });
+  }
+
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).json({ message: 'Invalid work experience', status: false });
+    return res
+      .status(400)
+      .json({ message: 'Invalid work experience id', status: false });
   }
 
   try {
-    const workExperience = await WorkExperience.findById(req.params.id);
+    const workExperience = await WorkExperience.findOne({
+      userId: req.params.id,
+    });
 
     if (!workExperience) {
-      res
+      return res
         .status(404)
         .json({ message: 'Work experience not found', status: false });
     }
 
-    res.status(200).json({ workExperience, status: true });
+    res.status(200).json({ works: workExperience, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
   }
@@ -52,7 +60,7 @@ const createWorkExperience = asyncHandler(async (req, res) => {
   } = req.body;
 
   if (!req.user) {
-    res.status(401).json({ message: 'Unauthorized', status: false });
+    return res.status(401).json({ message: 'Not authorized', status: false });
   }
 
   if (
@@ -64,29 +72,79 @@ const createWorkExperience = asyncHandler(async (req, res) => {
     !city ||
     !state
   ) {
-    res.status(400).json({ message: 'Please fill all fields', status: false });
+    return res
+      .status(400)
+      .json({ message: 'Please fill all fields', status: false });
   }
 
   try {
-    const createdWorkExperience = await WorkExperience.create({
-      companyName,
-      position,
-      startDate,
-      endDate,
-      description,
-      city,
-      state,
+    const workExperienceExists = await WorkExperience.findOne({
       userId: req.user._id,
     });
 
-    if (!createdWorkExperience) {
-      res.status(400).json({
-        message: 'Unable to create work experience',
-        status: false,
+    if (!workExperienceExists) {
+      const createdWorkExperience = await WorkExperience.create({
+        work: {
+          companyName,
+          position,
+          startDate,
+          endDate,
+          description,
+          city,
+          state,
+        },
+        userId: req.user._id,
       });
+
+      if (!createdWorkExperience) {
+        return res.status(400).json({
+          message: 'Unable to create work experience',
+          status: false,
+        });
+      }
+
+      return res
+        .status(201)
+        .json({ works: createdWorkExperience, status: true });
     }
 
-    res.status(201).json({ createdWorkExperience, status: true });
+    const existingWorkExperience = workExperienceExists.work.find(
+      (w) =>
+        w.companyName === companyName &&
+        w.position === position &&
+        w.startDate === startDate &&
+        w.endDate === endDate
+    );
+
+    if (workExperienceExists && existingWorkExperience) {
+      return res
+        .status(400)
+        .json({ message: 'Work experience already exists', status: false });
+    }
+
+    if (workExperienceExists && !existingWorkExperience) {
+      workExperienceExists.work.push({
+        companyName,
+        position,
+        startDate,
+        endDate,
+        description,
+        city,
+        state,
+      });
+
+      const updatedWorkExperience = await workExperienceExists.save();
+
+      if (!updatedWorkExperience) {
+        return res
+          .status(400)
+          .json({ message: 'Unable to create work experience', status: false });
+      }
+
+      return res
+        .status(201)
+        .json({ works: updatedWorkExperience, status: true });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
   }
@@ -107,7 +165,13 @@ const updateWorkExperience = asyncHandler(async (req, res) => {
   } = req.body;
 
   if (!req.user) {
-    res.status(401).json({ message: 'Unauthorized', status: false });
+    return res.status(401).json({ message: 'Unauthorized', status: false });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res
+      .status(400)
+      .json({ message: 'Invalid work experience', status: false });
   }
 
   if (
@@ -119,38 +183,53 @@ const updateWorkExperience = asyncHandler(async (req, res) => {
     !city &&
     !state
   ) {
-    res
+    return res
       .status(400)
       .json({ message: 'Please fill at least one field', status: false });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).json({ message: 'Invalid work experience', status: false });
-  }
-
   try {
-    const updatedWorkExperience = await WorkExperience.findOneAndUpdate(
-      { _id: req.params.id },
-      {
-        companyName,
-        position,
-        startDate,
-        endDate,
-        description,
-        city,
-        state,
-      },
-      { new: true }
-    );
+    const exp = await WorkExperience.findOne({
+      userId: req.user._id,
+    });
 
-    if (!updatedWorkExperience) {
-      res.status(400).json({
-        message: 'Unable to update work experience',
-        status: false,
-      });
+    if (!exp) {
+      return res
+        .status(404)
+        .json({ message: 'Work experience not found', status: false });
     }
 
-    res.status(200).json({ updatedWorkExperience, status: true });
+    const existingWorkExperience = exp.work.find(
+      (w) => w._id.toString() === req.params.id
+    );
+
+    if (exp && !existingWorkExperience) {
+      return res
+        .status(404)
+        .json({ message: 'Work experience not found', status: false });
+    }
+
+    if (exp && existingWorkExperience) {
+      const updatedWorkExperience = exp.work.map((w) =>
+        w._id.toString() === req.params.id
+          ? {
+              ...w,
+              companyName: companyName || w.companyName,
+              position: position || w.position,
+              startDate: startDate || w.startDate,
+              endDate: endDate || w.endDate,
+              description: description || w.description,
+              city: city || w.city,
+              state: state || w.state,
+            }
+          : w
+      );
+
+      exp.work = updatedWorkExperience;
+      await exp.save();
+
+      return res.status(200).json({ works: exp, status: true });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
   }
