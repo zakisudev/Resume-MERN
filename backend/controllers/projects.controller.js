@@ -3,11 +3,13 @@ const Project = require('../models/project.model');
 const mongoose = require('mongoose');
 
 // @desc    Get all projects
-// @route   GET /api/projects
+// @route   GET /api/projects/:id
 // @access  Public
-const getProjects = asyncHandler(async (_, res) => {
+const getProjects = asyncHandler(async (req, res) => {
   try {
-    const projects = await Project.find({});
+    const projects = await Project.findOne({
+      userId: req.params.id,
+    });
     res.status(200).json({ projects, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
@@ -18,33 +20,70 @@ const getProjects = asyncHandler(async (_, res) => {
 // @route   POST /api/projects
 // @access  Private
 const createProject = asyncHandler(async (req, res) => {
-  const { title, description, link, image, technologies } = req.body;
+  const { title, description, link, technologies } = req.body;
+  const image =
+    req?.file?.path ||
+    'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
 
   if (!req.user) {
-    res.status(401).json({ message: 'Unauthorized', status: false });
+    return res.status(401).json({ message: 'Not authorized', status: false });
   }
 
   if (!title || !description || !link || !technologies) {
-    res.status(400).json({ message: 'Please fill all fields', status: false });
+    return res
+      .status(400)
+      .json({ message: 'Please fill all fields', status: false });
   }
 
   try {
-    const project = await Project.create({
-      title,
-      description,
-      link,
-      image,
-      technologies,
+    const projectExists = await Project.findOne({
       userId: req.user._id,
     });
 
-    if (!project) {
-      res
-        .status(400)
-        .json({ message: 'Unable to create project', status: false });
+    if (!projectExists) {
+      const createdProject = await Project.create({
+        project: {
+          title,
+          description,
+          link,
+          image,
+          technologies,
+        },
+        userId: req.user._id,
+      });
+
+      if (!createdProject) {
+        return res
+          .status(400)
+          .json({ message: 'Unable to create project', status: false });
+      }
+
+      return res.status(201).json({ projects: createdProject, status: true });
     }
 
-    res.status(201).json({ project, status: true });
+    const existingProject = projectExists.project.find(
+      (p) => p.title === title && p.link === link
+    );
+
+    if (projectExists && existingProject) {
+      return res
+        .status(400)
+        .json({ message: 'Project already exists', status: false });
+    }
+
+    if (projectExists && !existingProject) {
+      projectExists.project.push({
+        title,
+        description,
+        link,
+        image,
+        technologies,
+      });
+
+      await projectExists.save();
+
+      return res.status(201).json({ projects: projectExists, status: true });
+    }
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
   }
