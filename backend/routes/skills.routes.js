@@ -8,7 +8,11 @@ const {
   deleteSkill,
 } = require('../controllers/skills.controller');
 
-router.route('/').get(getSkills).post(protect, createSkill);
-router.route('/:id').put(protect, updateSkill).delete(protect, deleteSkill);
+router.route('/').post(protect, createSkill);
+router
+  .route('/:id')
+  .get(getSkills)
+  .put(protect, updateSkill)
+  .delete(protect, deleteSkill);
 
 module.exports = router;
