@@ -4,12 +4,12 @@ import { toast } from 'react-toastify';
 
 const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
   const [educationData, setEducationData] = useState({
-    schoolName: editingEducation?.schoolName || '',
-    degree: editingEducation?.degree || '',
-    fieldOfStudy: editingEducation?.fieldOfStudy || '',
-    startYear: editingEducation?.startYear || '',
-    endYear: editingEducation?.endYear || '',
-    description: editingEducation?.description || '',
+    schoolName: '',
+    degree: '',
+    fieldOfStudy: '',
+    startYear: '',
+    endYear: '',
+    description: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,7 +18,7 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await updateEducation(editingEducation._id, educationData);
+      const res = await updateEducation(editingEducation?._id, educationData);
       if (res?.status) {
         setLoading(false);
         setEducationEdit(false);
@@ -37,7 +37,7 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
   };
 
   return (
-    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/80 fixed h-screen w-full">
+    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/40 fixed h-screen w-full">
       <div className="flex justify-center items-center w-full h-screen">
         <form
           onSubmit={handleEducationUpdate}
@@ -52,7 +52,11 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
               <input
                 type="text"
                 name="school"
-                value={educationData?.schoolName}
+                value={
+                  educationData?.schoolName ||
+                  editingEducation?.schoolName ||
+                  ''
+                }
                 minLength="6"
                 onChange={(e) =>
                   setEducationData({
@@ -73,7 +77,7 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
                 type="text"
                 name="degree"
                 minLength="6"
-                value={educationData?.degree}
+                value={educationData?.degree || editingEducation?.degree || ''}
                 onChange={(e) =>
                   setEducationData({
                     ...educationData,
@@ -93,7 +97,11 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
                 type="text"
                 name="fieldOfStudy"
                 minLength="6"
-                value={educationData?.fieldOfStudy}
+                value={
+                  educationData?.fieldOfStudy ||
+                  editingEducation?.fieldOfStudy ||
+                  ''
+                }
                 onChange={(e) =>
                   setEducationData({
                     ...educationData,
@@ -114,7 +122,9 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
                 name="startYear"
                 min="1900"
                 max="2099"
-                value={educationData?.startYear || ''}
+                value={
+                  educationData?.startYear || editingEducation?.startYear || ''
+                }
                 onChange={(e) =>
                   setEducationData({
                     ...educationData,
@@ -135,7 +145,9 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
                 name="endYear"
                 min="1900"
                 max="2099"
-                value={educationData?.endYear || ''}
+                value={
+                  educationData?.endYear || editingEducation?.endYear || ''
+                }
                 onChange={(e) =>
                   setEducationData({
                     ...educationData,
@@ -154,7 +166,11 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
               <textarea
                 type="text"
                 name="description"
-                value={educationData?.description || ''}
+                value={
+                  educationData?.description ||
+                  editingEducation?.description ||
+                  ''
+                }
                 onChange={(e) =>
                   setEducationData({
                     ...educationData,
@@ -169,7 +185,6 @@ const EducationEditModal = ({ editingEducation, setEducationEdit }) => {
           </div>
 
           {error && <p className="text-red-700">{error}</p>}
-
           <div className="flex justify-center gap-3">
             <button
               disabled={loading}

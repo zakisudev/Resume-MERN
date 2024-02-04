@@ -36,7 +36,7 @@ const EducationModal = ({ setEducationModal }) => {
   };
 
   return (
-    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/80 fixed h-screen w-full">
+    <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/40 fixed h-screen w-full">
       <div className="flex justify-center items-center w-full h-screen">
         <form
           onSubmit={handleEducationAdd}
