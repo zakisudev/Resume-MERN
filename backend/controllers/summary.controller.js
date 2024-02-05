@@ -7,7 +7,15 @@ const mongoose = require('mongoose');
 // @access  Public
 const getSummary = asyncHandler(async (req, res) => {
   try {
-    const summary = await Summary.find({});
+    const summary = await Summary.findOne({
+      userId: req.params.id,
+    });
+    if (!summary) {
+      return res
+        .status(404)
+        .json({ message: 'Summary not found', status: false });
+    }
+
     res.status(200).json({ summary, status: true });
   } catch (error) {
     res.status(400).json({ message: error.message, status: false });
