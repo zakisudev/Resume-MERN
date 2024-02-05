@@ -5,7 +5,9 @@ import SummaryAddModal from '../modals/SummaryAddModal';
 import Loader from '../common/Loader';
 
 const SummaryForm = () => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
   const [summaryEdit, setSummaryEdit] = useState(false);
   const [summaryModal, setSummaryModal] = useState(false);
   const [summary, setSummary] = useState({});
@@ -40,7 +42,7 @@ const SummaryForm = () => {
       try {
         setLoading(true);
         const res = await getSummary(userId);
-        setSummary(res[0]);
+        setSummary(res);
       } catch (error) {
         setErrorMsg('Error in getting summary');
       } finally {
@@ -60,7 +62,7 @@ const SummaryForm = () => {
         <div className="flex justify-center items-center w-full mx-auto">
           <Loader />
         </div>
-      ) : !summary ? (
+      ) : !summary?.summary ? (
         <div className="flex justify-between gap-2">
           <p className="flex p-2 items-center">No Summary Found</p>
           <button
@@ -81,7 +83,7 @@ const SummaryForm = () => {
                 type="text"
                 className={`${
                   !summaryEdit && 'cursor-not-allowed'
-                } flex px-2 py-1 rounded border border-gray-500 w-full flex-1 max-h-40 h-20`}
+                } flex px-2 py-1 rounded border border-gray-500 w-full flex-1 max-h-32 min-h-20 h-20 text-textPrimaryLight`}
                 name="summary"
                 id="summary"
                 value={summaryData?.summary || summary?.summary || ''}
