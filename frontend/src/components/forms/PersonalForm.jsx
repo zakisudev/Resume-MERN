@@ -5,7 +5,9 @@ import PersonalAddModal from '../modals/PersonalAddModal';
 import Loader from './../common/Loader';
 
 const PersonalForm = () => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userInfo');
   const [personalAddModal, setPersonalAddModal] = useState(false);
   const [personalEdit, setPersonalEdit] = useState(false);
   const [personalInfo, setPersonalInfo] = useState({});
@@ -55,6 +57,7 @@ const PersonalForm = () => {
         const personals = await getPersonalInfo(userId);
         setPersonalInfo(personals?.PersonalInfo[0]);
       } catch (error) {
+        setPersonalInfo(null);
         setErrorMsg('Error in getting personal information');
         setFetchLoading(false);
       } finally {
@@ -92,7 +95,7 @@ const PersonalForm = () => {
             onSubmit={handlePersonalUpdate}
             className="flex flex-col justify-center px-2"
           >
-            <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
+            <div className="flex flex-col gap-2 w-full justify-between md:flex-row">
               <div className="flex gap-2 justify-between items-center my-1 w-64">
                 <label
                   htmlFor="firstName"
@@ -145,7 +148,7 @@ const PersonalForm = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
+            <div className="flex flex-col gap-2 w-full justify-between md:flex-row">
               <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
                 <label
                   htmlFor="email"
@@ -190,7 +193,7 @@ const PersonalForm = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
+            <div className="flex flex-col gap-2 w-full justify-between md:flex-row">
               <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
                 <label
                   htmlFor="address"
@@ -238,7 +241,7 @@ const PersonalForm = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 w-full justify-between sm:flex-row">
+            <div className="flex flex-col gap-2 w-full justify-between md:flex-row">
               <div className="flex gap-2 flex-col justify-between items-center sm:flex-row my-1 w-64">
                 <label
                   htmlFor="state"
