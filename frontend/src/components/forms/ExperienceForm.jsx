@@ -5,7 +5,9 @@ import ExperienceAddModal from '../modals/ExperienceAddModal';
 import Loader from '../common/Loader';
 
 const ExperienceForm = () => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
   const [experiences, setExperiences] = useState([]);
   const [experienceEdit, setExperienceEdit] = useState(false);
   const [editingExperience, setEditingExperience] = useState({});
@@ -63,7 +65,7 @@ const ExperienceForm = () => {
           <Loader />
         </div>
       ) : !experiences || experiences?.length < 1 ? (
-        <div className="flex justify-between gap-2 px-2">
+        <div className="flex justify-between gap-2">
           <p className="flex p-2 items-center">No Experience Found</p>
           <button
             onClick={() => setExperienceModal(true)}
@@ -159,7 +161,9 @@ const ExperienceForm = () => {
                             startDate: e.target.value,
                           })
                         }
-                        disabled={experienceEdit}
+                        disabled={
+                          !experienceEdit || editingExperience._id !== exp._id
+                        }
                         className={`${
                           !experienceEdit && 'cursor-not-allowed'
                         } border border-gray-500 rounded p-1`}
