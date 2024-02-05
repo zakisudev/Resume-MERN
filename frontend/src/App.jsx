@@ -16,14 +16,14 @@ import ResumeEdit from './Pages/ResumeEdit';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route index element={<Home />} />
       <Route path="" element={<ProtectedRoutes />}>
+        <Route path="user" element={<Home />} />
         <Route path="profile" element={<Profile />} />
         <Route path="resume/:id" element={<ResumeEdit />} />
       </Route>
-      <Route path="admin" element={<Admin />} />
       <Route path="admin/login" element={<Login />} />
       <Route path="admin/register" element={<Register />} />
+      <Route path="admin" element={<Admin />} />
     </Route>
   )
 );
