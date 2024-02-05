@@ -1,7 +1,8 @@
 {
   "name": "digital-resume",
   "version": "1.0.0",
-  "description": "MERN stack digital-resume",
+  "description": "This project was developed with MERN stack",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",

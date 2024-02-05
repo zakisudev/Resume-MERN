@@ -1,5 +1,5 @@
+import path from 'path';
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const connectDB = require('./config/db');
 const port = process.env.PORT || 4000;
@@ -27,13 +27,14 @@ app.use(cookieParser());
 // Serve static assets
 app.use('/uploads', express.static('./uploads/'));
 
+const __dirname = path.resolve();
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
-  app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, '../frontend', 'build', 'index.html'));
-  });
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  );
 } else {
   app.get('/', (req, res) => {
     res.send('API is running...');
