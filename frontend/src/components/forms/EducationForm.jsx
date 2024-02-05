@@ -5,7 +5,9 @@ import EducationEditModal from '../modals/EducationEditModal';
 import Loader from '../common/Loader';
 
 const EducationForm = () => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
   const [educations, setEducations] = useState([]);
   const [educationEdit, setEducationEdit] = useState(false);
   const [editingEducation, setEditingEducation] = useState({});
@@ -59,8 +61,8 @@ const EducationForm = () => {
         <div className="flex justify-center items-center w-full mx-auto">
           <Loader />
         </div>
-      ) : !educations || educations?.length < 1 ? (
-        <div className="flex justify-between gap-2 px-2">
+      ) : !educations?.Educations || educations?.length < 1 ? (
+        <div className="flex justify-between gap-2">
           <p className="flex p-2 items-center">No Education Found</p>
           <button
             onClick={() => setEducationModal(true)}
