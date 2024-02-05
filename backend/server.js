@@ -24,6 +24,21 @@ app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// Serve static assets
+app.use('/uploads', express.static('./uploads/'));
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('../frontend/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'));
+  });
+} else {
+  app.get('/', (_, res) => {
+    res.send('API is running...');
+  });
+}
+
 // Define Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/personal-info', personalRoutes);
@@ -33,9 +48,6 @@ app.use('/api/skills', skillRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/social-links', socialRoutes);
 app.use('/api/summary', summaryRoutes);
-
-// Serve static assets
-app.use('/uploads', express.static('./uploads/'));
 
 // Listen to the port
 app.listen(port, () => console.log(`Server running on port ${port}`));
