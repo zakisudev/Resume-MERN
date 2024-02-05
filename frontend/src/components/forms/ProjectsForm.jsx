@@ -6,7 +6,9 @@ import ProjectEditModal from '../modals/ProjectEditModal';
 import Loader from '../common/Loader';
 
 const ProjectsForm = () => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
   const [projectEdit, setProjectEdit] = useState(false);
   const [projectModal, setProjectModal] = useState(false);
   const [editingProject, setEditingProject] = useState({});
@@ -159,7 +161,7 @@ const ProjectsForm = () => {
                       Visit demo
                     </Link>
                   </div>
-                  <div className="flex flex-col justify-end p-2">
+                  <div className="flex flex-col justify-center p-2 ml-auto">
                     <div className="flex gap-1 flex-col items-center sm:flex-row my-1">
                       <button
                         type="button"

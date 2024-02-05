@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { IoIosWarning } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
-const Projects = ({ projects, theme }) => {
+const Projects = ({ projects }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [image, setImage] = useState({});
 
@@ -13,9 +14,19 @@ const Projects = ({ projects, theme }) => {
   const handleClose = () => {
     setIsImageOpen(false);
   };
+
+  if (!projects && projects.length < 1) {
+    return (
+      <div className="flex justify-center items-center my-10 gap-10">
+        <IoIosWarning className="text-4xl text-primaryColorDark" />
+        <p className="text-center">{projects?.message}</p>
+      </div>
+    );
+  }
+
   return (
     projects && (
-      <div className="my-2 w-full text-left">
+      <div className="my-2 w-[80%] text-left">
         <h2 className="flex flex-row items-center text-2xl font-bold underline uppercase mb-2 bg-gray-300 py-2 px-1">
           Project:
         </h2>

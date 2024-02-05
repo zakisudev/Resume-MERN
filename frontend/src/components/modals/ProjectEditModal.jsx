@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 
 const ProjectEditModal = ({ setProjectEdit, project }) => {
   const [projectData, setProjectData] = useState({
-    title: project?.title || '',
-    description: project?.description || '',
-    link: project?.link || '',
-    technologies: project?.technologies || '',
+    title: '',
+    description: '',
+    link: '',
+    technologies: '',
     image: '',
   });
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ const ProjectEditModal = ({ setProjectEdit, project }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await updateProject(project?._id, project);
+      const res = await updateProject(project?._id, projectData);
       if (res.status) {
         toast.success('Project added successfully');
         setLoading(false);
@@ -32,6 +32,7 @@ const ProjectEditModal = ({ setProjectEdit, project }) => {
     }
   };
 
+  console.log(projectData);
   return (
     <div className="flex top-0 bottom-0 right-0 left-0 inset-0 bg-black/40 fixed h-screen w-full">
       <div className="flex justify-center items-center w-full h-screen">
@@ -52,7 +53,7 @@ const ProjectEditModal = ({ setProjectEdit, project }) => {
                 className="flex px-2 py-1 rounded border border-gray-500"
                 name="title"
                 id="title"
-                value={projectData?.title || ''}
+                value={projectData?.title || project?.title || ''}
                 onChange={(e) =>
                   setProjectData({
                     ...projectData,
@@ -77,7 +78,7 @@ const ProjectEditModal = ({ setProjectEdit, project }) => {
                 className="flex px-2 py-1 rounded border border-gray-500"
                 name="technologies"
                 id="technologies"
-                value={projectData?.technologies || ''}
+                value={projectData?.technologies || project?.technologies || ''}
                 onChange={(e) =>
                   setProjectData({
                     ...projectData,
@@ -96,7 +97,7 @@ const ProjectEditModal = ({ setProjectEdit, project }) => {
                 className="flex px-2 py-1 rounded border border-gray-500"
                 name="link"
                 id="link"
-                value={projectData?.link || ''}
+                value={projectData?.link || project?.link || ''}
                 onChange={(e) =>
                   setProjectData({
                     ...projectData,
@@ -136,10 +137,10 @@ const ProjectEditModal = ({ setProjectEdit, project }) => {
                 className="flex px-2 py-1 rounded border border-gray-500 max-h-40 h-20 min-h-20"
                 name="description"
                 id="description"
-                value={projectData?.description || ''}
+                value={projectData?.description || project?.description || ''}
                 onChange={(e) =>
                   setProjectData({
-                    ...project,
+                    ...projectData,
                     description: e.target.value,
                   })
                 }
@@ -151,7 +152,7 @@ const ProjectEditModal = ({ setProjectEdit, project }) => {
                 type="submit"
                 className="bg-secondaryColorDark text-white rounded p-1 px-3 font-semibold"
               >
-                {loading ? 'Adding...' : 'Add'}
+                {loading ? 'Loading...' : 'Update'}
               </button>
               <button
                 onClick={() => setProjectEdit(false)}
