@@ -19,12 +19,14 @@ const Header = ({ toggleTheme, theme }) => {
   return (
     <header className="sticky top-0 w-full h-16 flex flex-wrap gap-5 items-center px-10 bg-secondaryColorDark">
       <div className="flex justify-between w-full flex-1">
-        <Link
-          to="/user"
-          className="px-2 py-1 rounded bg-primaryColorLight font-semibold"
-        >
-          Home
-        </Link>
+        {user && (
+          <Link
+            to="/user"
+            className="px-2 py-1 rounded bg-primaryColorLight font-semibold"
+          >
+            Home
+          </Link>
+        )}
         {user ? (
           <div className="flex justify-center items-center gap-3">
             <Link
