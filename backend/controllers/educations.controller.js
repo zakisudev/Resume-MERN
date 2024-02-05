@@ -10,6 +10,12 @@ const getEducations = asyncHandler(async (req, res) => {
     const educations = await Education.findOne({
       userId: req.params.id,
     });
+    if (!educations) {
+      return res
+        .status(404)
+        .json({ message: 'Education not found', status: false });
+    }
+
     res.status(200).json({ educations, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
