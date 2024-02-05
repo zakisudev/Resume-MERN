@@ -8,7 +8,7 @@ import ProjectsForm from '../components/forms/ProjectsForm';
 
 const ResumeEdit = () => {
   return (
-    <div className="flex flex-col w-[90%] justify-center my-3">
+    <div className="flex flex-col w-full sm:w-[90%] justify-center my-3">
       <h1 className="text-xl text-center my-2 font-semibold uppercase">
         Edit your Resume
       </h1>
