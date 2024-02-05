@@ -6,11 +6,16 @@ const mongoose = require('mongoose');
 // @route   GET /api/skills/:id
 // @access  Public
 const getSkills = asyncHandler(async (req, res) => {
-  const uId = req.params.id;
   try {
     const skills = await Skill.findOne({
-      userId: uId,
+      userId: req.params.id,
     });
+    if (!skills) {
+      return res
+        .status(404)
+        .json({ message: 'Skills not found', status: false });
+    }
+
     res.status(200).json({ skills, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
