@@ -11,7 +11,7 @@ const {
 router.route('/').post(protect, createSocialLink);
 router
   .route('/:id')
-  .get(getSocialLinks)
+  .get(protect, getSocialLinks)
   .put(protect, updateSocialLink)
   .delete(protect, deleteSocialLink);
 

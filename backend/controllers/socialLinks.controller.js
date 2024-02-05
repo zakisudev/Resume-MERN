@@ -6,11 +6,16 @@ const mongoose = require('mongoose');
 // @route   GET /api/socialLinks/:id
 // @access  Public
 const getSocialLinks = asyncHandler(async (req, res) => {
-  const uId = req.params.id;
   try {
     const socials = await SocialLink.findOne({
-      userId: uId,
+      userId: req?.params?.id,
     });
+    if (!socials) {
+      return res
+        .status(404)
+        .json({ message: 'Social links not found', status: false });
+    }
+
     res.status(200).json({ socials, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
