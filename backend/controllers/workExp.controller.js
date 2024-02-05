@@ -7,7 +7,15 @@ const WorkExperience = require('../models/workExp.model');
 // @access  Public
 const getWorkExperiences = asyncHandler(async (req, res) => {
   try {
-    const works = await WorkExperience.find({});
+    const works = await WorkExperience.findOne({
+      userId: req.params.id,
+    });
+    if (!works) {
+      return res
+        .status(404)
+        .json({ message: 'Work experience not found', status: false });
+    }
+
     res.status(200).json({ works, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
