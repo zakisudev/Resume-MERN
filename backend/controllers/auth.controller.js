@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const Me = require('../models/me');
+const User = require('../models/user.model');
 const mongoose = require('mongoose');
 const {
   comparePassword,
@@ -10,33 +10,51 @@ const {
 // @desc    Register
 // @route   POST /api/auth/register
 // @access  Public
-const registerMe = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
 
   try {
     if (!email || !username || !password) {
-      res
+      return res
         .status(400)
         .json({ message: 'Please fill all fields', status: false });
     }
 
-    const meExists = await Me.findOne({
+    const userExists = await User.findOne({
       $or: [{ email }, { username }],
     });
 
-    if (meExists) {
-      res.status(400).json({ message: 'User already exists', status: false });
+    if (userExists) {
+      return res
+        .status(400)
+        .json({ message: 'User already exists', status: false });
     }
 
-    await Me.create({
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: 'Password must be at least 6 characters',
+        status: false,
+      });
+    }
+
+    if (username.length < 4) {
+      return res.status(400).json({
+        message: 'Username must be at least 4 characters',
+        status: false,
+      });
+    }
+
+    await User.create({
       email,
       username,
       password: await hashPassword(password),
     });
 
-    res.status(201).json({ message: 'Registered successfully', status: true });
+    return res
+      .status(201)
+      .json({ message: 'Registered successfully', status: true });
   } catch (error) {
-    res.status(400).json({ message: error.message, status: false });
+    return res.status(400).json({ message: error.message, status: false });
   }
 });
 
@@ -47,17 +65,17 @@ const logMeIn = asyncHandler(async (req, res) => {
   const { user, password } = req.body;
 
   try {
-    const me =
-      (await Me.findOne({ email: user })) ||
-      (await Me.findOne({ username: user }));
+    const oldUser =
+      (await User.findOne({ email: user })) ||
+      (await User.findOne({ username: user }));
 
-    if (!me) {
+    if (!oldUser) {
       return res
         .status(401)
         .json({ message: 'Invalid credentials', status: false });
     }
 
-    const isMatch = await comparePassword(password, me.password);
+    const isMatch = await comparePassword(password, oldUser.password);
 
     if (!isMatch) {
       return res
@@ -67,10 +85,20 @@ const logMeIn = asyncHandler(async (req, res) => {
 
     return res
       .status(200)
-      .cookie('jwt', generateToken(me), {
+      .cookie('jwt', generateToken(oldUser), {
         httpOnly: true,
       })
-      .json({ user: me._id, status: true });
+      .json({
+        user: {
+          _id: oldUser._id,
+          username: oldUser.username,
+          email: oldUser.email,
+          avatar: oldUser.avatar,
+          isPremium: oldUser.isPremium,
+          isAdmin: oldUser.isAdmin,
+        },
+        status: true,
+      });
   } catch (error) {
     return res
       .status(401)
@@ -82,7 +110,7 @@ const logMeIn = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/logout
 // @access  Private
 const logMeOut = asyncHandler(async (_, res) => {
-  res
+  return res
     .status(200)
     .cookie('jwt', '', {
       httpOnly: true,
@@ -94,25 +122,25 @@ const logMeOut = asyncHandler(async (_, res) => {
 // @desc    Get profile
 // @route   GET /api/auth/profile/:id
 // @access  Private
-const getMe = asyncHandler(async (req, res) => {
+const getUserProfile = asyncHandler(async (req, res) => {
   if (!req.user) {
-    res.status(404).json({ message: 'User not found', status: false });
+    return res.status(404).json({ message: 'Not authorized', status: false });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(404).json({ message: 'Invalid user Id', status: false });
+  if (!mongoose.Types.ObjectId.isValid(req.params?.id)) {
+    return res.status(404).json({ message: 'Invalid user Id', status: false });
   }
 
   try {
-    const me = await Me.findById(req.params.id).select('-password');
+    const user = await User.findById(req.params?.id).select('-password');
 
-    if (!me) {
-      res.status(404).json({ message: 'User not found', status: false });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found', status: false });
     }
 
-    res.status(200).json({ profile: me, status: true });
+    res.status(200).json({ profile: user, status: true });
   } catch (error) {
-    res
+    return res
       .status(404)
       .json({ message: 'Error ocurred, try again later', status: false });
   }
@@ -121,14 +149,14 @@ const getMe = asyncHandler(async (req, res) => {
 // @desc    Update profile
 // @route   PUT /api/auth/profile/:id
 // @access  Private
-const updateMe = asyncHandler(async (req, res) => {
+const updateProfile = asyncHandler(async (req, res) => {
   const { username, email } = req.body;
 
   if (!req.user) {
-    return res.status(404).json({ message: 'User not found', status: false });
+    return res.status(404).json({ message: 'Not authorized', status: false });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.Types.ObjectId.isValid(req.params?.id)) {
     return res.status(404).json({ message: 'Invalid user Id', status: false });
   }
 
@@ -139,60 +167,60 @@ const updateMe = asyncHandler(async (req, res) => {
   }
 
   try {
-    const updatedMe = await Me.findById(req.params.id);
+    const user = await User.findById(req.params?.id);
 
-    if (!updatedMe) {
-      return res
-        .status(404)
-        .json({ message: 'User not updated', status: false });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found', status: false });
     }
 
-    if (username) updatedMe.username = username;
-    if (email) updatedMe.email = email;
-    if (req.file) updatedMe.avatar = req.file?.path;
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (req.file) user.avatar = req.file?.path;
 
-    await updatedMe.save();
+    await user.save();
 
-    res.status(200).json({ profile: updatedMe, status: true });
+    return res.status(200).json({ profile: user, status: true });
   } catch (error) {
     return res.status(404).json({ message: error.message, status: false });
   }
 });
 
-// @desc    Delete Me
+// @desc    Delete User
 // @route   DELETE /api/auth/profile/:id
 // @access  Private
-const deleteMe = asyncHandler(async (req, res) => {
+const deleteUser = asyncHandler(async (req, res) => {
   if (!req.user) {
-    res.status(404).json({ message: 'User not found', status: false });
+    return res.status(404).json({ message: 'Not authorized', status: false });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(404).json({ message: 'Invalid user Id', status: false });
+  if (!mongoose.Types.ObjectId.isValid(req.params?.id)) {
+    return res.status(404).json({ message: 'Invalid user Id', status: false });
   }
 
   try {
-    const deletedMe = await Me.findOneAndDelete({
-      _id: req.params.id,
+    const deletedUser = await User.findOneAndDelete({
+      _id: req.params?.id,
     });
 
-    if (!deletedMe) {
-      res.status(404).json({ message: 'User not deleted', status: false });
+    if (!deletedUser) {
+      return res
+        .status(404)
+        .json({ message: 'User not deleted', status: false });
     }
 
-    res
+    return res
       .status(200)
       .json({ message: 'User deleted successfully', status: true });
   } catch (error) {
-    res.status(404).json({ message: error.message, status: false });
+    return res.status(404).json({ message: error.message, status: false });
   }
 });
 
 module.exports = {
-  registerMe,
+  registerUser,
   logMeIn,
   logMeOut,
-  getMe,
-  updateMe,
-  deleteMe,
+  getUserProfile,
+  updateProfile,
+  deleteUser,
 };
