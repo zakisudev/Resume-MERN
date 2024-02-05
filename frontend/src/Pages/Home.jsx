@@ -16,72 +16,130 @@ import {
   getSummary,
 } from '../utils/apis';
 import Footer from '../components/common/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const Home = ({ theme }) => {
-  const userId = localStorage.getItem('token');
-  const [personal, setPersonal] = useState({});
-  const [socialLinks, setSocialLinks] = useState([]);
-  const [summary, setSummary] = useState('');
-  const [education, setEducation] = useState([]);
-  const [experience, setExperience] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [skills, setSkills] = useState([]);
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
+  const navigate = useNavigate();
+
+  const [personal, setPersonal] = useState(null);
+  const [socialLinks, setSocialLinks] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [education, setEducation] = useState(null);
+  const [experience, setExperience] = useState(null);
+  const [projects, setProjects] = useState(null);
+  const [skills, setSkills] = useState(null);
 
   useEffect(() => {
     const fetchPersonal = async () => {
       const personalFromServer = await getPersonalInfo(userId);
-      setPersonal(personalFromServer?.PersonalInfo);
+      if (personalFromServer?.status) {
+        setPersonal(personalFromServer?.PersonalInfo[0]);
+      } else {
+        setPersonal(personalFromServer);
+      }
       fetchSocialLinks();
     };
+
     const fetchSocialLinks = async () => {
       const socialLinksFromServer = await getSocialLinks(userId);
-      setSocialLinks(socialLinksFromServer);
+      if (socialLinksFromServer?.status) {
+        setSocialLinks(socialLinksFromServer?.SocialLink);
+      } else {
+        setSocialLinks(socialLinksFromServer);
+      }
       fetchSummary();
     };
+
     const fetchSummary = async () => {
       const summaryFromServer = await getSummary(userId);
-      setSummary(summaryFromServer[0]);
+      if (summaryFromServer?.status) {
+        setSummary(summaryFromServer);
+      } else {
+        setSummary(summaryFromServer);
+      }
       fetchEducation();
     };
+
     const fetchEducation = async () => {
       const educationFromServer = await getEducations(userId);
-      setEducation(educationFromServer);
+      if (educationFromServer?.status) {
+        setEducation(educationFromServer?.Education);
+      } else {
+        setEducation(educationFromServer);
+      }
       fetchExperience();
     };
+
     const fetchExperience = async () => {
       const experienceFromServer = await getExperiences(userId);
-      setExperience(experienceFromServer);
+      if (experienceFromServer?.status) {
+        setExperience(experienceFromServer?.Experience);
+      } else {
+        setExperience(experienceFromServer);
+      }
       fetchProjects();
     };
+
     const fetchProjects = async () => {
       const projectsFromServer = await getProjects(userId);
-      setProjects(projectsFromServer);
+      if (projectsFromServer?.status) {
+        setProjects(projectsFromServer?.Projects);
+      } else {
+        setProjects(projectsFromServer);
+      }
       fetchSkills();
     };
+
     const fetchSkills = async () => {
       const skillsFromServer = await getSkills(userId);
-      setSkills(skillsFromServer);
+      if (skillsFromServer?.status) {
+        setSkills(skillsFromServer?.Skills);
+      } else {
+        setSkills(skillsFromServer);
+      }
     };
     fetchPersonal();
   }, [userId]);
 
+  useEffect(() => {
+    if (!userId) {
+      navigate('/admin/login', { replace: true });
+    }
+  }, [userId, navigate]);
+
   return (
     <>
-      {/* Profile */}
       {/* Personal Information */}
-      <PersonalInformation personal={personal} theme={theme} />
+      {personal && <PersonalInformation personal={personal} theme={theme} />}
+
       {/* Social links */}
-      <SocialLinks socialLinks={socialLinks} theme={theme} />
+      {personal && socialLinks && (
+        <SocialLinks socialLinks={socialLinks} theme={theme} />
+      )}
+
       {/* Summary */}
-      <Summary summary={summary} theme={theme} />
+      {personal && summary && <Summary summary={summary} theme={theme} />}
+
       {/* Education */}
-      <Education education={education} theme={theme} />
+      {personal && education && (
+        <Education education={education} theme={theme} />
+      )}
+
       {/* Experience */}
-      <Experience experience={experience} theme={theme} />
+      {personal && experience && (
+        <Experience experience={experience} theme={theme} />
+      )}
+
       {/* Skills */}
-      <Skills skills={skills} theme={theme} />
+      {personal && skills && <Skills skills={skills} theme={theme} />}
+
       {/* Projects */}
-      <Projects projects={projects} theme={theme} />
+      {personal && projects && <Projects projects={projects} theme={theme} />}
+
+      {/* Footer */}
       <Footer theme={theme} />
     </>
   );
