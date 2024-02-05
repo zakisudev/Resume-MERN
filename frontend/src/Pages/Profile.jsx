@@ -8,7 +8,10 @@ import Loader from '../components/common/Loader';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const user = localStorage.getItem('token');
+  const user = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : localStorage.getItem('userInfo');
+
   const [profile, setProfile] = useState({});
   const [profileEditView, setProfileEditView] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,27 +21,18 @@ const Profile = () => {
     if (!user) {
       navigate('/admin/login', { replace: true });
     }
-  }, [user, navigate]);
-
-  useEffect(() => {
     const fetchProfile = async () => {
-      try {
-        setError('');
-        setLoading(true);
-        const res = await getMe(user);
-        if (!res?.status && !user) {
-          return navigate('/admin/login', { replace: true });
-        }
+      const res = await getMe(user?._id);
+      if (res?.status) {
         setProfile(res?.profile);
-      } catch (error) {
-        setError(error?.message);
-      } finally {
-        setLoading(false);
-        return;
+        return setLoading(false);
+      } else {
+        setError(res?.message);
+        return setLoading(false);
       }
     };
     fetchProfile();
-  }, [profileEditView, navigate, user]);
+  }, []);
 
   return (
     <>
@@ -49,7 +43,7 @@ const Profile = () => {
         />
       )}
 
-      {loading ? (
+      {loading && !user ? (
         <Loader />
       ) : error ? (
         <p className="text-center text-red-700 p-2">{error}</p>
@@ -74,7 +68,7 @@ const Profile = () => {
 
               <div className="flex gap-3">
                 <Link
-                  to={`/resume/${user}`}
+                  to={`/resume/${user?._id}`}
                   className="px-3 py-1 bg-primaryColorLight rounded flex w-full sm:w-auto items-center justify-center gap-2 text-textPrimaryDark hover:bg-primaryColorLight/80 transition-all duration-300 ease-in-out"
                 >
                   <FaPrint />{' '}
