@@ -3,14 +3,19 @@ const PersonalInformation = require('../models/personalInformation.model');
 const mongoose = require('mongoose');
 
 // @desc    Get all personal information
-// @route   GET /api/personals/:id
+// @route   GET /api/personal-info/:id
 // @access  Public
 const getPersonalInformation = asyncHandler(async (req, res) => {
-  const uId = req.params?.id;
   try {
     const personal = await PersonalInformation.findOne({
-      userId: uId,
+      userId: req.params?.id,
     });
+    if (!personal) {
+      return res
+        .status(404)
+        .json({ message: 'Personal information not found', status: false });
+    }
+
     res.status(200).json({ personal, status: true });
   } catch (error) {
     res.status(500).json({ message: error.message, status: false });
