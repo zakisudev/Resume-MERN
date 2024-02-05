@@ -10,106 +10,20 @@ import {
   SOCIAL_URL,
 } from '../constants/urls';
 
-// Get Requests
-export const getPersonalInfo = async (userId) => {
-  try {
-    const res = await axios.get(`${PERSONAL_INFO_URL}/${userId}`);
-    if (res?.status) {
-      return res?.data?.personal;
-    } else {
-      return 'No personal information found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
-export const getSocialLinks = async (userId) => {
-  try {
-    const res = await axios.get(`${SOCIAL_URL}/${userId}`);
-    if (res?.status) {
-      return res?.data?.socials;
-    } else {
-      return 'No social link found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
-export const getSummary = async (userId) => {
-  try {
-    const res = await axios.get(`${SUMMARY_URL}/${userId}`);
-    if (res?.status) {
-      return res?.data?.summary;
-    } else {
-      return 'No summary found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
-export const getEducations = async (userId) => {
-  try {
-    const res = await axios.get(`${EDUCATION_URL}/${userId}`);
-    if (res?.status) {
-      return res?.data?.educations;
-    } else {
-      return 'No education found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
-export const getExperiences = async (userId) => {
-  try {
-    const res = await axios.get(`${EXPERIENCE_URL}/${userId}`);
-    if (res?.status) {
-      return res?.data?.works;
-    } else {
-      return 'No experience found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
-export const getSkills = async (userId) => {
-  try {
-    const res = await axios.get(`${SKILL_URL}/${userId}`);
-    if (res?.status) {
-      return res?.data?.skills;
-    } else {
-      return 'No skill found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
-export const getProjects = async (userId) => {
-  try {
-    const res = await axios.get(`${PROJECT_URL}/${userId}`);
-    if (res?.status) {
-      return res?.data?.projects;
-    } else {
-      return 'No project found';
-    }
-  } catch (err) {
-    console.error(err);
-    return err.message;
-  }
-};
-
 // Auth Requests
+export const register = async (user) => {
+  try {
+    const res = await axios.post(`${AUTH_URL}/register`, user);
+    if (res?.status) {
+      return res?.data;
+    } else {
+      return 'No user found';
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
 export const login = async (user) => {
   try {
     const res = await axios.post(`${AUTH_URL}/login`, user);
@@ -141,9 +55,9 @@ export const getMe = async (userId) => {
   try {
     const res = await axios.get(`${AUTH_URL}/profile/${userId}`);
     if (res.status) {
-      return res.data;
+      return res?.data;
     } else {
-      return 'No user found';
+      return res?.message;
     }
   } catch (err) {
     console.error(err);
@@ -175,6 +89,98 @@ export const updateMe = async (userId, user) => {
       } else {
         return 'No user found';
       }
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+// Get Requests
+export const getPersonalInfo = async (userId) => {
+  try {
+    const res = await axios.get(`${PERSONAL_INFO_URL}/${userId}`);
+    if (res?.status) {
+      return res?.data?.personal;
+    } else {
+      return res;
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const getSocialLinks = async (userId) => {
+  try {
+    const res = await axios.get(`${SOCIAL_URL}/${userId}`);
+    if (res?.status) {
+      return res?.data?.socials;
+    } else {
+      return res;
+    }
+  } catch (err) {
+    return err.response?.data;
+  }
+};
+
+export const getSummary = async (userId) => {
+  try {
+    const res = await axios.get(`${SUMMARY_URL}/${userId}`);
+    if (res?.status) {
+      return res?.data?.summary;
+    } else {
+      return res;
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const getEducations = async (userId) => {
+  try {
+    const res = await axios.get(`${EDUCATION_URL}/${userId}`);
+    if (res?.status) {
+      return res?.data?.educations;
+    } else {
+      return res;
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const getExperiences = async (userId) => {
+  try {
+    const res = await axios.get(`${EXPERIENCE_URL}/${userId}`);
+    if (res?.status) {
+      return res?.data?.works;
+    } else {
+      return res;
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const getSkills = async (userId) => {
+  try {
+    const res = await axios.get(`${SKILL_URL}/${userId}`);
+    if (res?.status) {
+      return res?.data?.skills;
+    } else {
+      return res;
+    }
+  } catch (err) {
+    return err?.response?.data;
+  }
+};
+
+export const getProjects = async (userId) => {
+  try {
+    const res = await axios.get(`${PROJECT_URL}/${userId}`);
+    if (res?.status) {
+      return res?.data?.projects;
+    } else {
+      return res;
     }
   } catch (err) {
     return err?.response?.data;
@@ -393,7 +399,7 @@ export const updateProject = async (projectId, project) => {
       if (res.status) {
         return res.data;
       } else {
-        return 'No project found';
+        return res;
       }
     } else if (project.image) {
       const res = await axios.put(`${PROJECT_URL}/${projectId}`, project, {
@@ -404,7 +410,7 @@ export const updateProject = async (projectId, project) => {
       if (res.status) {
         return res.data;
       } else {
-        return 'No project found';
+        return res;
       }
     }
   } catch (err) {
