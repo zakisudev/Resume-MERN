@@ -2,6 +2,7 @@
   "name": "digital-resume",
   "version": "1.0.0",
   "description": "This project was developed with MERN stack",
+  "proxy": "http://localhost:4000",
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
