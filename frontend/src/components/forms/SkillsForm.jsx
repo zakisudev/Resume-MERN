@@ -5,7 +5,9 @@ import SkillEditModal from '../modals/SkillEditModal';
 import Loader from '../common/Loader';
 
 const SkillsForm = () => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
   const [editingSkill, setEditingSkill] = useState([]);
   const [skillEdit, setSkillEdit] = useState(false);
   const [skillsModal, setSkillsModal] = useState(false);
@@ -71,8 +73,8 @@ const SkillsForm = () => {
         <div className="flex justify-center items-center w-full mx-auto">
           <Loader />
         </div>
-      ) : !skills ? (
-        <div className="flex justify-between gap-2 px-2">
+      ) : !skills?.Languages ? (
+        <div className="flex justify-between gap-2">
           <p className="flex p-2 items-center">No Skills Found</p>
           <button
             onClick={() => setSkillsModal(true)}
