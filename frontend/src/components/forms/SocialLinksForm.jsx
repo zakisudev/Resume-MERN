@@ -8,7 +8,9 @@ import { FaGithub, FaTwitter, FaInstagram, FaFacebookF } from 'react-icons/fa';
 import Loader from '../common/Loader';
 
 const SocialLinksForm = () => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
   const [editingSocial, setEditingSocial] = useState([]);
   const [socialEdit, setSocialEdit] = useState(false);
   const [socialModal, setSocialModal] = useState(false);
@@ -52,7 +54,7 @@ const SocialLinksForm = () => {
           <Loader />
         </div>
       ) : !socialLinks || socialLinks.length < 1 ? (
-        <div className="flex justify-between gap-2 px-2">
+        <div className="flex justify-between gap-2">
           <p className="flex p-2 items-center">No Social link Found</p>
           <button
             onClick={() => setSocialModal(true)}

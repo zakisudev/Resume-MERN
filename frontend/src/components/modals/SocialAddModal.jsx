@@ -46,7 +46,7 @@ const SocialAddModal = ({ setSocialModal }) => {
       <div className="flex justify-center items-center w-full h-screen">
         <form
           onSubmit={handleAddSocialLink}
-          className="bg-backgroundLight rounded p-5 w-[300px]"
+          className="bg-backgroundLight rounded p-5 w-[300px] text-textPrimaryLight"
         >
           <div className="flex flex-col gap-2 w-full">
             <div className="flex gap-1 flex-col items-center my-1">

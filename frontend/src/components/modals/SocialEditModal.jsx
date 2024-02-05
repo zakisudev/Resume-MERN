@@ -3,7 +3,9 @@ import { updateSocialLinks } from '../../utils/apis';
 import { toast } from 'react-toastify';
 
 const SocialEditModal = ({ setSocialEdit, social }) => {
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))._id
+    : localStorage.getItem('userId');
   const [socialData, setSocialData] = useState({
     socialName: social?.socialName || '',
     link: social?.link || '',
@@ -30,7 +32,7 @@ const SocialEditModal = ({ setSocialEdit, social }) => {
       setError('');
       const res = await updateSocialLinks(userId, data);
       if (res.status) {
-        toast.success('Social link edited successfully');
+        toast.success('Social link updated successfully');
         setSocialEdit(false);
         setLoading(false);
       } else {
